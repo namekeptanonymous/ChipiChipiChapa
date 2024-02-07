@@ -1,5 +1,10 @@
 # ChipiChipiChapa
 
-Group members: [TO BE ADDED]
+Group members:
 
-This is a private repository for our COSC 360 project!
+1. Abdul Faiz
+2. Chaitan Ghanekar
+3. Kael Pearson
+
+
+This is a private repository for our COSC 360 project, ChipiChipiChapa.
