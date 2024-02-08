@@ -8,3 +8,5 @@ Group members:
 
 
 This is a private repository for our COSC 360 project, ChipiChipiChapa.
+
+It can be accessed from [here!](https://namekeptanonymous.github.io/ChipiChipiChapa/)
