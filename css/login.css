@@ -1,0 +1,19 @@
+body {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.footer {
+    background-color: #2d2d2d;
+    box-shadow: 0 0 35pt 2pt #121212;
+}
+
+.navbar {
+    font-weight: 650;
+    background-color: white;
+}
+
+.brand-image {
+    margin-right: 0.1em;
+}
