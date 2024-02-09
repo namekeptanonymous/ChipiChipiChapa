@@ -16,15 +16,36 @@
                 ChipiChipiChapa</a>
             <div class="navbar-nav text-center">
                 <a class="nav-link" href="../index.html">Home</a>
-                <a class="nav-link disabled" target="_blank" rel="noopener noreferrer" href="#top">Login | Register</a>
+                <a class="nav-link disabled" target="_blank" rel="noopener noreferrer" href="#top">Login/Register</a>
             </div>
         </div>
     </nav>
 
     <div id="main">
-        <!-- this is placeholder content! remove later -->
-        <br><br><br><br>bingo bongo<br><br><br><br><br><br><br><br><br>
-        <!-- placeholder content over -->
+        <div class="container text-center">
+            <div class="row justify-content-center">
+                <div class="col-md-5 align-self-center">
+                    <form action="http://www.randyconnolly.com/tests/process.php" method="get">
+                        <fieldset>
+                            <div class="card login-card">
+                                <div class="card-body">
+                                    <h3 class="card-title">Login | Register</h3><br>
+                                    <label for="email">Email:</label>
+                                    <input type="text" id="email" name="email" placeholder="example@gmail.com"><br><br>
+                        
+                                    <label for="passw">First Meeting?</label>
+                                    <input type="password" id="passw" name="passw"><br><br>
+                        
+                                    <input type="submit" value="Submit" class="btn btn-outline-light">
+                                    <input type="reset" value="Reset" class="btn btn-outline-light">
+                                </div>
+                            </div>
+                        </fieldset>
+                      </form>
+                </div>
+            </div>
+        </div>
+        <br>
     </div>
 
     <footer class="footer text-center py-3">

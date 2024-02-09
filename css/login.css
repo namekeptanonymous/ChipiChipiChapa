@@ -2,11 +2,20 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
+    height: 100%;
+    width: 100%;
+    overscroll-behavior-x: none;
+    overscroll-behavior-y: none;
+    scrollbar-width: none;
 }
 
 .footer {
     background-color: #2d2d2d;
-    box-shadow: 0 0 35pt 2pt #121212;
+    box-shadow: 0 0 30pt 2pt #121212;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
 }
 
 .navbar {
@@ -16,4 +25,12 @@ body {
 
 .brand-image {
     margin-right: 0.1em;
+}
+
+.login-card {
+    background-color: #2d2d2d;
+    color: white;
+    margin: 2em 2em 2em 2em;
+    border-radius: 1.5rem;
+    border-width: 4px;
 }
