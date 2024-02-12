@@ -66,23 +66,27 @@
         email.addEventListener("blur", function(e) {
             if (!email_pattern.test(email.value) && !(email.value == null || email.value == "")) {
                 email.style.border = "3px solid red";
+                email.style.borderRadius = "0.25rem";
                 email_flag = false;
                 submit_btn.disabled = true;
             } else {
-                email.style.border = "none";
+                email.style = "";
                 email_flag = true;
                 if (email_flag && passw_flag) {
                     submit_btn.disabled = false;
                 }
             }
         });
-        passw.addEventListener("blur", function(e) {
+        passw.addEventListener("change", function(e) {
             if (passw.value != null && passw.value != "") {
+                passw.style = "";
                 passw_flag = true;
                 if (email_flag && passw_flag) {
                     submit_btn.disabled = false;
                 }
             } else {
+                passw.style.border = "3px solid red";
+                passw.style.borderRadius = "0.25rem";
                 passw_flag = false;
                 submit_btn.disabled = true;
             }
