@@ -22,14 +22,17 @@ body {
 .navbar {
     font-weight: 650;
     background-color: white;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
 }
 
 #splash {
     box-sizing: border-box;
     margin: 5vw;
-    padding: 5vw;
+    padding: 5vw 5vw 7vw 5vw;
     width: 90vw;
     background-color: white;
+    border-radius: 1rem;
 }
 
 #splash-text {
