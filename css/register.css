@@ -28,13 +28,13 @@ body {
     background-color: white;
 }
 
-#login-body {
+#register-body {
     box-sizing: border-box;
     margin: 5vw 0vw 5vw 0vw;
     width: 100vw;
 }
 
-.login-card {
+.register-card {
     background-color: #2d2d2d;
     color: white;
     margin: 2em 2em 2em 2em;
@@ -44,8 +44,15 @@ body {
     padding-bottom: 1em;
 }
 
-.login-card input {
+.register-card input {
     margin: 0.5em 1em 0.5em 1em;
+}
+  
+#profile-pic {
+    max-width: 90%;
+    border: 1px lightgray solid;
+    border-radius: 0.2rem;
+    padding: 0.3em;
 }
 
 #submit-btn {
