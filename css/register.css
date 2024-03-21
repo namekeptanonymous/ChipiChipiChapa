@@ -28,6 +28,7 @@ body {
     background-color: white;
     border-bottom-left-radius: 1rem;
     border-bottom-right-radius: 1rem;
+    box-shadow: 0 0 15pt 2pt #737373;
 }
 
 #register-body {
