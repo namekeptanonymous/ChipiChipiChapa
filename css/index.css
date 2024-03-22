@@ -31,7 +31,7 @@ body {
     box-sizing: border-box;
     margin: 5vw;
     padding: 5vw 5vw 7vw 5vw;
-    width: 90vw;
+    width: 90%;
     background-color: white;
     border-radius: 1rem;
 }
@@ -55,4 +55,8 @@ body {
     left: auto;
     top: auto;
     transform: translateX(-3.9em);
+}
+
+.nav-link .material-symbols-outlined {
+    padding-right: 0.1em;
 }

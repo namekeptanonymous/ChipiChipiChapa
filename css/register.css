@@ -6,7 +6,6 @@ body {
     margin: 0;
     overscroll-behavior-x: none;
     overscroll-behavior-y: none;
-    scrollbar-width: none;
     background-color: lightgray;
 }
 
@@ -34,7 +33,7 @@ body {
 #register-body {
     box-sizing: border-box;
     margin: 5vw 0vw 5vw 0vw;
-    width: 100vw;
+    width: 100%;
 }
 
 .register-card {
@@ -69,4 +68,8 @@ body {
     left: auto;
     top: auto;
     transform: translateX(-3.9em);
+}
+
+.nav-link .material-symbols-outlined {
+    padding-right: 0.1em;
 }
