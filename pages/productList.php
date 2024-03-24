@@ -60,8 +60,7 @@
                     if(isset($_GET['search'])) {
                         $search = $_GET['search'];
                         $limit = isset($_GET['limit']) ? $_GET['limit'] : 5; 
-                        // Process the search query
-                        // Perform database queries, etc.
+
                         try {
                             $pdo = new PDO("mysql:host=localhost;dbname=chipichipichapa", "root", "");
                             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -69,7 +68,6 @@
                             die("Connection failed: " . $e->getMessage());
                         }
 
-                        // Fetch products based on search query and limit
                         $sql = 'SELECT * FROM products WHERE productName LIKE :search LIMIT :limit';
                         $stmt = $pdo->prepare($sql);
                         $stmt->bindValue(':search', '%' . $search . '%');
@@ -113,7 +111,6 @@
             </div>
         </div>
     </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>
