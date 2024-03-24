@@ -20,11 +20,11 @@ if (isset($_SESSION['profilePicture'])) {
     <title>ChipiChipiChapa</title>
 </head>
 <body>
-<nav class="navbar sticky-top navbar-expand-md">
+    <nav class="navbar sticky-top navbar-expand-md">
         <div class="container-fluid">
             <a class="navbar-brand" href="../index.php"><img src="../images/longbanner.png" height="38" class="d-inline-block align-top brand-image" alt="" /></a>
             <div class="navbar-nav text-center d-flex align-items-center justify-content-center">
-                <form class="form-inline">
+                <form class="form-inline" action="./productList.php" method="get">
                     <div class="input-group">
                         <input type="text" class="form-control mr-sm-2" placeholder="Search" />
                         <button class="btn btn-outline-secondary my-2 my-sm-0 d-flex
@@ -56,7 +56,7 @@ if (isset($_SESSION['profilePicture'])) {
                     ?><?php echo isset($_SESSION['userName']) ? $_SESSION['userName'] : 'User'; ?>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                        <li><a class="dropdown-item" href="#">User Profile</a></li>
+                        <li><a class="dropdown-item" href="./user_profile.php">User Profile</a></li>
                         <li><a class="dropdown-item" href="../php/logout.php?return=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                     </ul>
                 </div>
@@ -68,7 +68,7 @@ if (isset($_SESSION['profilePicture'])) {
         <div class="container-fluid text-center" id="login-body">
             <div class="row justify-content-center">
                 <div class="col-md-8">
-                    <form method="POST" id="login-form" action="../php/login.php">
+                    <form method="POST" id="login-form" action="../php/login.php" autocomplete="off">
                         <fieldset>
                             <div class="card login-card">
                                 <div class="card-body">

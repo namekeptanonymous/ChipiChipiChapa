@@ -40,14 +40,6 @@ body {
     font-weight: 900;
 }
 
-#splash-text-blue {
-    color: #287dd6;
-}
-
-#splash-text-maroon {
-    color: #8A1538;
-}
-
 .dropdown-menu {
     position: fixed;
     right: 0;
