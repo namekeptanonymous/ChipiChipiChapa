@@ -1,4 +1,9 @@
 <!DOCTYPE html>
+
+<?php
+session_start();
+?>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -13,18 +18,27 @@
 <body>
     <nav class="navbar sticky-top navbar-expand-md navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="../index.html">
+            <a class="navbar-brand" href="../index.php">
                 <img src="../images/longbanner.png" height="38" class="d-inline-block align-top brand-image" alt="">
             </a>
             <div class="navbar-nav text-center d-flex align-items-center justify-content-center">
-                <a class="nav-link" href="../pages/login.html">Login</a>or<a class="nav-link" href="../pages/register.html">Register</a>
-                <div class="dropdown">
+                <a class="nav-link" href="../pages/login.php">Login</a>or<a class="nav-link" href="../pages/register.php">Register</a>
+                <div class="dropdown <?php echo isset($_SESSION['userName']) ? '' : 'd-none'; ?>" id="dropdown">
                     <a class="nav-link dropdown-toggle d-flex align-items-center justify-content-center" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="material-symbols-outlined">account_circle</span>User
+                    <?php
+                        // Check if profile picture data is available in session
+                        if (isset($_SESSION['profilePicture'])) {
+                            // Use the display_image.php script as the src attribute
+                            echo '<img src="../php/display_image.php" height="24" alt="Profile Picture" class="material-symbols-outlined">';
+                        } else {
+                            // If profile picture data is not available, display a placeholder image or text
+                            echo '<span class="material-symbols-outlined">account_circle</span>';
+                        }
+                    ?><?php echo isset($_SESSION['userName']) ? $_SESSION['userName'] : 'User'; ?>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                        <li><a class="dropdown-item" href="#">User Settings</a></li>
-                        <li><a class="dropdown-item" href="#">Logout</a></li>
+                        <li><a class="dropdown-item" href="#">User Profile</a></li>
+                        <li><a class="dropdown-item" href="../php/logout.php?return=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                     </ul>
                 </div>
             </div>

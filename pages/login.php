@@ -1,4 +1,9 @@
 <!DOCTYPE html>
+
+<?php
+session_start();
+?>
+
 <html>
 <head lang="en">
     <meta charset="utf-8">
@@ -11,9 +16,9 @@
     <title>ChipiChipiChapa</title>
 </head>
 <body>
-    <nav class="navbar sticky-top navbar-expand-md">
+<nav class="navbar sticky-top navbar-expand-md">
         <div class="container-fluid">
-            <a class="navbar-brand" href="../index.html"><img src="../images/longbanner.png" height="38" class="d-inline-block align-top brand-image" alt="" /></a>
+            <a class="navbar-brand" href="../index.php"><img src="../images/longbanner.png" height="38" class="d-inline-block align-top brand-image" alt="" /></a>
             <div class="navbar-nav text-center d-flex align-items-center justify-content-center">
                 <form class="form-inline">
                     <div class="input-group">
@@ -24,14 +29,23 @@
                         </button>
                     </div>
                 </form>
-                <a class="nav-link disabled" href="#top">Login</a>or<a class="nav-link" href="./register.html">Register</a>
-                <div class="dropdown">
+                <a class="nav-link disabled" href="#top">Login</a>or<a class="nav-link" href="./register.php">Register</a>
+                <div class="dropdown <?php echo isset($_SESSION['userName']) ? '' : 'd-none'; ?>" id="dropdown">
                     <a class="nav-link dropdown-toggle d-flex align-items-center justify-content-center" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="material-symbols-outlined">account_circle</span>User
+                    <?php
+                        // Check if profile picture data is available in session
+                        if (isset($_SESSION['profilePicture'])) {
+                            // Use the display_image.php script as the src attribute
+                            echo '<img src="../php/display_image.php" height="24" alt="Profile Picture" class="material-symbols-outlined">';
+                        } else {
+                            // If profile picture data is not available, display a placeholder image or text
+                            echo '<span class="material-symbols-outlined">account_circle</span>';
+                        }
+                    ?><?php echo isset($_SESSION['userName']) ? $_SESSION['userName'] : 'User'; ?>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                        <li><a class="dropdown-item" href="#">User Settings</a></li>
-                        <li><a class="dropdown-item" href="#">Logout</a></li>
+                        <li><a class="dropdown-item" href="#">User Profile</a></li>
+                        <li><a class="dropdown-item" href="../php/logout.php?return=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                     </ul>
                 </div>
             </div>
@@ -73,6 +87,8 @@
     </footer>
 
     <script>
+        
+
         var email_pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         var email = document.getElementById("email");
         var passw = document.getElementById("passw");
@@ -121,61 +137,6 @@
                 alert("Please enter a password.")
             }
         }
-    </script>
-
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getDatabase, ref, set, push, child, get, update } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyDl-f0Ql_8m61ldg593Vbhxfq-n7OKGt38",
-      authDomain: "cosc-310-project---error404.firebaseapp.com",
-      databaseURL: "https://cosc-310-project---error404-default-rtdb.firebaseio.com",
-      projectId: "cosc-310-project---error404",
-      storageBucket: "cosc-310-project---error404.appspot.com",
-      messagingSenderId: "863240973704",
-      appId: "1:863240973704:web:657a8cda993f7833191e3d"
-    };
-  
-    // Initialize Firebase & the Realtime Database
-    const app = initializeApp(firebaseConfig);
-    const database = getDatabase(app);
-    var username = document.getElementById("username");
-    var passw = document.getElementById("passw");
-    document.getElementById("login-form").onsubmit = function(e){
-        if (username.value == null || username.value.trim() == "") {
-            e.preventDefault();
-            alert("Please enter a username.");
-            return;
-        }
-        else if (!username_pattern.test(username.value)) {
-            e.preventDefault();
-            alert("Please enter a valid username. It cannot contain the following characters: '.', '$', '[', ']', '#', '/'");
-            return;
-        } else if (passw.value == null || passw.value == "") {
-            e.preventDefault();
-            alert("Please enter a password.");
-            return;
-        }
-        e.preventDefault();
-
-        const userDataRef = ref(database, 'users');
-        
-        get(child(userDataRef, username.value)).then((snapshot) => {   // Checks if user exists
-            if (snapshot.exists()) {
-                var userPass = snapshot.val().password;
-                if (userPass === passw.value) {
-                    alert("You've been signed in! Welcome!");
-                } else {
-                    alert("You've entered an incorrect password. Please try again.")
-                }
-            } else {
-                alert("There is no user with that username. Please enter a valid username.")
-            }
-        }).catch((error) => {
-            console.error(error);
-        });
-    };
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
