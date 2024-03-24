@@ -19,6 +19,7 @@ try {
         // Set parameters
         $email = $_POST['email'];
         $userName = $_POST['name'];
+        $password = password_hash($_POST['passw'], PASSWORD_DEFAULT);
 
         // Handle profile picture upload
         if(isset($_FILES['profile-pic']) && $_FILES['profile-pic']['error'] == UPLOAD_ERR_OK) {
@@ -30,17 +31,20 @@ try {
 
         // Retrieve last inserted userId
         $stmt = $conn->query("SELECT MAX(userid) AS max_userid FROM users");
-        $lastUserId = $stmt->fetch(PDO::FETCH_ASSOC)['max_userid'];
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $lastUserId = ($result && isset($result['max_userid'])) ? $result['max_userid'] : 0;
         $newUserId = $lastUserId + 1;
 
+
         // Prepare SQL statement
-        $stmt = $conn->prepare("INSERT INTO users (userid, email, profilePicture, userName) VALUES (?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO users (userid, email, profilePicture, userName, password, admin) VALUES (?, ?, ?, ?, ?, 0)");
         
         // Bind parameters
         $stmt->bindParam(1, $newUserId, PDO::PARAM_INT);
         $stmt->bindParam(2, $email, PDO::PARAM_STR);
         $stmt->bindParam(3, $profilePicture, PDO::PARAM_LOB);
         $stmt->bindParam(4, $userName, PDO::PARAM_STR);
+        $stmt->bindParam(5, $password, PDO::PARAM_STR);
 
         // Execute SQL statement
         if ($stmt->execute()) {
@@ -49,17 +53,14 @@ try {
             $_SESSION['userName'] = $userName;
             $_SESSION['profilePicture'] = $profilePicture;
             
-            echo "New record created successfully";
+            echo "<script>alert('User $userName has registered successfully.'); window.location.href = '../index.php';</script>";
+
         } else {
-            echo "Error: Unable to execute statement";
+            echo "<script>alert('Error: Something went wrong. User registration failed, please check that you have entered all of the requested information.'); window.location.href = '../index.php';</script>";
         }
 
         // Close statement
         $stmt = null;
-        
-        // Redirect back to the referring page
-        header("Location: " . $_SERVER["HTTP_REFERER"]);
-        exit; // Make sure to exit after the redirection
     }
 } catch(PDOException $e) {
     echo "Connection failed: " . $e->getMessage();

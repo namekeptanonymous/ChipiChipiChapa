@@ -2,6 +2,10 @@
 
 <?php
 session_start();
+if (isset($_SESSION['profilePicture'])) {
+    header("Location: ../index.php");
+    exit();
+}
 ?>
 
 <html>
@@ -64,7 +68,7 @@ session_start();
         <div class="container-fluid text-center" id="login-body">
             <div class="row justify-content-center">
                 <div class="col-md-8">
-                    <form method="post" id="login-form">
+                    <form method="POST" id="login-form" action="../php/login.php">
                         <fieldset>
                             <div class="card login-card">
                                 <div class="card-body">

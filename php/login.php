@@ -18,7 +18,7 @@ try {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Set parameters
         $email = $_POST['email'];
-        $password = $_POST['password']; // Assuming the password is sent from the form
+        $password = $_POST['passw'];
 
         // Prepare SQL statement
         $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
@@ -40,21 +40,21 @@ try {
                 $_SESSION['logged_in'] = true;
                 $_SESSION['userName'] = $user['userName'];
                 $_SESSION['profilePicture'] = $user['profilePicture'];
+                $userName = $_SESSION['userName'];
+
+                echo "<script>alert('User $userName has logged in successfully.'); window.location.href = '../index.php';</script>";
             } else {
                 // Password is incorrect
-                echo "Incorrect password";
+                echo "<script>alert('Incorrect password'); window.history.back();</script>";
+
             }
         } else {
             // User with provided email not found
-            echo "User not found";
+            echo "<script>alert('No user was found with the provided e-mail.'); window.history.back();</script>";
         }
 
         // Close statement
         $stmt = null;
-        
-        // Redirect back to the referring page
-        header("Location: " . $_SERVER["HTTP_REFERER"]);
-        exit; // Make sure to exit after the redirection
     }
 } catch(PDOException $e) {
     echo "Connection failed: " . $e->getMessage();
