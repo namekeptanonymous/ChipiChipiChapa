@@ -22,7 +22,14 @@ session_start();
                 <img src="../images/longbanner.png" height="38" class="d-inline-block align-top brand-image" alt="">
             </a>
             <div class="navbar-nav text-center d-flex align-items-center justify-content-center">
-                <a class="nav-link" href="../pages/login.php">Login</a>or<a class="nav-link" href="../pages/register.php">Register</a>
+                <?php
+                    // Check if profile picture data is available in session
+                    if (isset($_SESSION['profilePicture'])) {
+                        echo '';
+                    } else {
+                        echo '<a class="nav-link" href="./login.php">Login</a>or<a class="nav-link" href="./register.php">Register</a>';
+                    }
+                ?>
                 <div class="dropdown <?php echo isset($_SESSION['userName']) ? '' : 'd-none'; ?>" id="dropdown">
                     <a class="nav-link dropdown-toggle d-flex align-items-center justify-content-center" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <?php

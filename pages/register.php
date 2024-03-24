@@ -29,7 +29,14 @@ session_start();
                         </button>
                     </div>
                 </form>
-                <a class="nav-link" href="./login.php">Login</a>or<a class="nav-link disabled" href="#top">Register</a>
+                <?php
+                    // Check if profile picture data is available in session
+                    if (isset($_SESSION['profilePicture'])) {
+                        echo '';
+                    } else {
+                        echo '<a class="nav-link" href="./login.php">Login</a>or<a class="nav-link disabled" href="./register.php">Register</a>';
+                    }
+                ?>
                 <div class="dropdown <?php echo isset($_SESSION['userName']) ? '' : 'd-none'; ?>" id="dropdown">
                     <a class="nav-link dropdown-toggle d-flex align-items-center justify-content-center" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <?php
