@@ -60,13 +60,9 @@
                     if(isset($_GET['search'])) {
                         $search = $_GET['search'];
                         $limit = isset($_GET['limit']) ? $_GET['limit'] : 5; // Default limit is 5
-                        // Process the search query
-                        // Perform database queries, etc.
-                        echo "<h2 class='text-center'>Search results for: " . $search . " (Limit: " . $limit . ")</h2>";
                         try {
                             $pdo = new PDO("mysql:host=localhost;dbname=chipichipichapa", "root", "");
                             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                            echo "connected <br>";
                         } catch (PDOException $e) {
                             die("Connection failed: " . $e->getMessage());
                         }
@@ -78,7 +74,7 @@
                         $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
                         $stmt->execute();
 
-                        echo "<div class='row row-cols-1 row-cols-md-2 row-cols-lg-3'>";
+                        echo "<div class='row row-cols-1 row-cols-md-2 row-cols-lg-3' id=results>";
                         while ($row = $stmt->fetch()) {
                             echo "<div class='col mb-4'>";
                             echo "<div class='card'>";

@@ -2,7 +2,6 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
-    height: 100vh;
     margin: 0;
     overscroll-behavior-x: none;
     overscroll-behavior-y: none;
@@ -29,7 +28,7 @@ body {
 
 #splash {
     box-sizing: border-box;
-    margin: 5vw;
+    margin: 5vw 5vw 10vw 5vw;
     padding: 5vw 5vw 7vw 5vw;
     width: 90%;
     background-color: white;
@@ -47,6 +46,10 @@ body {
 
 #splash-text-maroon {
     color: #8A1538;
+}
+
+#results {
+    margin-top: 2vh;
 }
 
 .dropdown-menu {
