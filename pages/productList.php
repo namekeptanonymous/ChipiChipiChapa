@@ -59,7 +59,9 @@
                     <?php
                     if(isset($_GET['search'])) {
                         $search = $_GET['search'];
-                        $limit = isset($_GET['limit']) ? $_GET['limit'] : 5; // Default limit is 5
+                        $limit = isset($_GET['limit']) ? $_GET['limit'] : 5; 
+                        // Process the search query
+                        // Perform database queries, etc.
                         try {
                             $pdo = new PDO("mysql:host=localhost;dbname=chipichipichapa", "root", "");
                             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -74,21 +76,27 @@
                         $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
                         $stmt->execute();
 
-                        echo "<div class='row row-cols-1 row-cols-md-2 row-cols-lg-3' id=results>";
-                        while ($row = $stmt->fetch()) {
-                            echo "<div class='col mb-4'>";
-                            echo "<div class='card'>";
-                            echo "<img src='../images/" . $row['imgPath'] . "' class='card-img-top' alt='" . $row['productName'] . "'>";
-                            echo "<div class='card-body'>";
-                            echo "<h5 class='card-title'><a href='product.php?pid=" . $row['pid'] . "'>" . $row['productName'] . "</a></h5>";
-                            echo "<p class='card-text'>Current Price: $" . $row['currPrice'] . "</p>";
-                            echo "<p class='card-text'>Highest Price: $" . $row['highestPrice'] . "</p>";
-                            echo "<p class='card-text'>Lowest Price: $" . $row['lowestPrice'] . "</p>";
-                            echo "</div>";
-                            echo "</div>";
+                        if($stmt->rowCount()>0 && !($search == "")){
+                            echo "<div class='row row-cols-1 row-cols-md-2 row-cols-lg-3' id=results>";
+                            while ($row = $stmt->fetch()) {
+                                echo "<div class='col mb-4'>";
+                                echo "<div class='card'>";
+                                echo "<img src='../images/" . $row['imgPath'] . "' class='card-img-top' alt='" . $row['productName'] . "'>";
+                                echo "<div class='card-body'>";
+                                echo "<h5 class='card-title'><a href='product.php?pid=" . $row['pid'] . "'>" . $row['productName'] . "</a></h5>";
+                                echo "<p class='card-text'>Current Price: $" . $row['currPrice'] . "</p>";
+                                echo "<p class='card-text'>Highest Price: $" . $row['highestPrice'] . "</p>";
+                                echo "<p class='card-text'>Lowest Price: $" . $row['lowestPrice'] . "</p>";
+                                echo "</div>";
+                                echo "</div>";
+                                echo "</div>";
+                            }
                             echo "</div>";
                         }
-                        echo "</div>";
+                        else if (!($search == "")) {
+                            echo "<h3 class='text-center'>Sorry, no results for: " . $search . "</h2>";
+                        }
+
                     } else {
                         echo "<p class='text-center'>No search query provided.</p>";
                     }
