@@ -25,7 +25,7 @@ if (!isset($_SESSION['profilePicture'])) {
             <a class="navbar-brand" href="../index.php"><img src="../images/longbanner.png" height="38" class="d-inline-block align-top brand-image" alt="" /></a>
             <div class="navbar-nav text-center d-flex align-items-center justify-content-center">
                 <form class="form-inline" action="./productList.php" method="get">
-    roup">
+                    <div class="input-group">
                         <input type="text" class="form-control mr-sm-2" placeholder="Search" />
                         <button class="btn btn-outline-secondary my-2 my-sm-0 d-flex
                         align-items-center justify-content-center" type="submit" style="padding: 6px">
