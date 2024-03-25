@@ -36,7 +36,7 @@ try {
             if (!empty($userName)) {
                 $sql .= "userName = ?, ";
                 $values[] = $userName;
-                if (!isset($_GET['id']) && !$_SESSION['admin']) {
+                if ((!isset($_GET['id']) && !$_SESSION['admin']) || ($_SESSION['admin'] && ($_GET['id']==$_SESSION['userid']))) {
                     $_SESSION['userName'] = $userName;
                 }
             }
@@ -49,7 +49,7 @@ try {
             if (!empty($profilePicture)) {
                 $sql .= "profilePicture = ?, ";
                 $values[] = $profilePicture;
-                if (!isset($_GET['id']) && !$_SESSION['admin']) {
+                if ((!isset($_GET['id']) && !$_SESSION['admin']) || ($_SESSION['admin'] && ($_GET['id']==$_SESSION['userid']))) {
                     $_SESSION['profilePicture'] = $profilePicture;
                 }
             }
