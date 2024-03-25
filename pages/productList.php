@@ -36,7 +36,7 @@ session_start();
                         // Check if profile picture data is available in session
                         if (isset($_SESSION['profilePicture'])) {
                             // Use the display_image.php script as the src attribute
-                            echo '<img src="../php/display_image.php" height="24" alt="Profile Picture" class="material-symbols-outlined">';
+                            echo '<img src="../php/display_image.php" height="24" alt="Profile Picture" class="material-symbols-outlined rounded-circle border">';
                         } else {
                             // If profile picture data is not available, display a placeholder image or text
                             echo '<span class="material-symbols-outlined">account_circle</span>';
@@ -45,6 +45,7 @@ session_start();
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="userDropdown">
                         <li><a class="dropdown-item" href="./user_profile.php">User Profile</a></li>
+                        <?php echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="./manage_users.php">Manage Users</a></li>' : '';?>
                         <li><a class="dropdown-item" href="../php/logout.php?return=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                     </ul>
                 </div>

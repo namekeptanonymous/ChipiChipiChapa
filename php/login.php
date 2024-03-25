@@ -39,10 +39,17 @@ try {
                 // Password is correct, set session variables
                 $_SESSION['logged_in'] = true;
                 $_SESSION['userName'] = $user['userName'];
+                $_SESSION['email'] = $user['email'];
                 $_SESSION['profilePicture'] = $user['profilePicture'];
+                $_SESSION['admin'] = ($user['admin']===0) ? false : true;
                 $userName = $_SESSION['userName'];
 
-                echo "<script>alert('User $userName has logged in successfully.'); window.location.href = '../index.php';</script>";
+                if ($_SESSION['admin']) {
+                    echo "<script>alert('Admin $userName with email $email has logged in successfully.'); window.location.href = '../index.php';</script>";
+                } else {
+                    echo "<script>alert('User $userName with email $email has logged in successfully.'); window.location.href = '../index.php';</script>";
+                }
+                
             } else {
                 // Password is incorrect
                 echo "<script>alert('Incorrect password'); window.history.back();</script>";

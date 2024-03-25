@@ -24,9 +24,6 @@ try {
         // Handle profile picture upload
         if(isset($_FILES['profile-pic']) && $_FILES['profile-pic']['error'] == UPLOAD_ERR_OK) {
             $profilePicture = file_get_contents($_FILES['profile-pic']['tmp_name']);
-        } else {
-            // Default profile picture if no picture uploaded
-            $profilePicture = file_get_contents('default_profile_pic.png');
         }
 
         // Retrieve last inserted userId
@@ -51,7 +48,9 @@ try {
             // User successfully registered, set session variables
             $_SESSION['logged_in'] = true;
             $_SESSION['userName'] = $userName;
+            $_SESSION['email'] = $email;
             $_SESSION['profilePicture'] = $profilePicture;
+            $_SESSION['admin'] = false;
             
             echo "<script>alert('User $userName has registered successfully.'); window.location.href = '../index.php';</script>";
 

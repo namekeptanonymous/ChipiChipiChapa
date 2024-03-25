@@ -2,7 +2,7 @@
 
 <?php
 session_start();
-if (isset($_SESSION['profilePicture'])) {
+if (isset($_SESSION['admin']) && !$_SESSION['admin']) {
     header("Location: ../index.php");
     exit();
 }
@@ -14,7 +14,7 @@ if (isset($_SESSION['profilePicture'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-    <link rel="stylesheet" href="../css/login.css" />
+    <link rel="stylesheet" href="../css/manage_users.css" />
     <link rel="icon" type="image/x-icon" href="../images/icon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ChipiChipiChapa</title>
@@ -57,7 +57,6 @@ if (isset($_SESSION['profilePicture'])) {
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="userDropdown">
                         <li><a class="dropdown-item" href="./user_profile.php">User Profile</a></li>
-                        <?php echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="./manage_users.php">Manage Users</a></li>' : '';?>
                         <li><a class="dropdown-item" href="../php/logout.php?return=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                     </ul>
                 </div>
@@ -66,29 +65,49 @@ if (isset($_SESSION['profilePicture'])) {
     </nav>
 
     <div id="main">
-        <div class="container-fluid text-center" id="login-body">
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <form method="POST" id="login-form" action="../php/login.php" autocomplete="off">
-                        <fieldset>
-                            <div class="card login-card">
-                                <div class="card-body">
-                                    <h3 class="card-title">Login</h3><br>
-                                    <label for="email">Email:</label><br>
-                                    <input type="email" id="email" name="email" placeholder="example@gmail.com"><br><br>
-                        
-                                    <label for="passw">Password:</label><br>
-                                    <input type="password" id="passw" name="passw"><br><br>
-                        
-                                    <input type="submit" value="Submit" class="btn btn-success" id="submit-btn">
+        <div class="container-fluid" id="splash">
+            <h1 id="splash-text">Manage Users</h1>
+            <br><br>
+            <div class="container-fluid">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class='card profile-details-card'>
+                            <div class='card-body'>
+                                <div class='user-profile'>
+                                    <img src="../php/display_image.php" class="rounded-circle border" alt="Profile Picture" height="50">
+                                    <?php echo $_SESSION['userName']; ?>
                                 </div>
+
+                                <label for="profile-email">Email:</label><br>
+                                <span id="profile-email"><?php echo $_SESSION['email']; ?></span><br><br>
+                    
+                                <label for="profile-admin">Admin:</label><br>
+                                <span id="profile-admin"><?php echo ($_SESSION['admin']) ? 'Yes' : 'No'; ?></span>
                             </div>
-                        </fieldset>
-                      </form>
+                        </div>
+                    </div>
                 </div>
+                <br><br>
+                <p><b>Modify profile details:</b></p>
+                <form method="POST" id="profile-change" action="../php/change_profile.php" enctype="multipart/form-data">
+                    <fieldset>
+                        <label for="name">Name:</label><br>
+                        <input type="text" id="name" name="name"><br><br>
+
+                        <label for="passw"> New Password:</label><br>
+                        <input type="password" id="passw" name="passw"><br><br>
+
+                        <label for="passw-rpt">New Password (repeat):</label><br>
+                        <input type="password" id="passw-rpt" name="passw-rpt"><br><br>
+
+                        <label for="profile-pic" id="profile-pic-label">Profile Picture:</label><br>
+                        <input type="file" id="profile-pic" name="profile-pic"><br><br>
+            
+                        <input type="submit" value="Submit" class="btn btn-success" id="submit-btn">
+                    </fieldset>
+                </form>
             </div>
         </div>
-        <br>
     </div>
 
     <footer class="footer text-center py-3">
@@ -100,56 +119,25 @@ if (isset($_SESSION['profilePicture'])) {
     </footer>
 
     <script>
-        
+        document.getElementById('profile-change').addEventListener('submit', function(event) {
+            var name = document.getElementById('name').value;
+            var passw = document.getElementById('passw').value;
+            var passwRpt = document.getElementById('passw-rpt').value;
+            var profilePicture = document.getElementById('profile-pic').value;
 
-        var email_pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        var email = document.getElementById("email");
-        var passw = document.getElementById("passw");
-        var submit_btn = document.getElementById("submit-btn");
-        submit_btn.disabled = true;
-        var email_flag = false;
-        var passw_flag = false;
-        email.addEventListener("blur", function(e) {
-            if (!email_pattern.test(email.value) && !(email.value == null || email.value == "")) {
-                email.style.border = "3px solid red";
-                email.style.borderRadius = "0.25rem";
-                email_flag = false;
-                submit_btn.disabled = true;
-            } else {
-                email.style = "";
-                email_flag = true;
-                if (email_flag && passw_flag) {
-                    submit_btn.disabled = false;
-                }
+            // Check if any field is empty
+            if (!name && !passw && !passwRpt && !profilePicture) {
+                alert('No fields were filled in, please fill in at least one type of field(s).');
+                event.preventDefault();
+                return;
+            }
+
+            if (passw !== passwRpt) {
+                alert('New password and repeat password must match.');
+                event.preventDefault();
+                return;
             }
         });
-        passw.addEventListener("change", function(e) {
-            if (passw.value != null && passw.value != "") {
-                passw.style = "";
-                passw_flag = true;
-                if (email_flag && passw_flag) {
-                    submit_btn.disabled = false;
-                }
-            } else {
-                passw.style.border = "3px solid red";
-                passw.style.borderRadius = "0.25rem";
-                passw_flag = false;
-                submit_btn.disabled = true;
-            }
-        });
-
-        document.getElementById("login-form").onsubmit = function(e){
-            if (email.value == null || email.value == "") {
-                e.preventDefault();
-                alert("Please enter an e-mail address.")
-            } else if (!email_pattern.test(email.value)) {
-                e.preventDefault();
-                alert("Please enter a valid e-mail address.")
-            } else if (passw.value == null || passw.value == "") {
-                e.preventDefault();
-                alert("Please enter a password.")
-            }
-        }
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

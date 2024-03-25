@@ -28,7 +28,7 @@ body {
 
 #splash {
     box-sizing: border-box;
-    margin: 5vw;
+    margin: 5vw 5vw 12vw 5vw;
     padding: 5vw 5vw 7vw 5vw;
     width: 90%;
     background-color: white;
@@ -40,12 +40,11 @@ body {
     font-weight: 900;
 }
 
-#splash-text-blue {
-    color: #287dd6;
-}
-
-#splash-text-maroon {
-    color: #8A1538;
+#profile-pic {
+    max-width: 90%;
+    border: 1px lightgray solid;
+    border-radius: 0.2rem;
+    padding: 0.3em;
 }
 
 .dropdown-menu {
@@ -58,4 +57,22 @@ body {
 
 .nav-link .material-symbols-outlined {
     margin-right: 0.1em;
+}
+
+.user-profile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 2em;
+    font-weight: 700;
+    margin: 0em 0.5em 0.5em 0.5em;
+}
+
+.user-profile img {
+    margin-right: 0.2em;
+}
+
+.card {
+    padding: 0.5em;
 }
