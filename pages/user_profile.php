@@ -71,7 +71,7 @@ if (!isset($_SESSION['profilePicture'])) {
             <div class="container-fluid">
                 <div class="row justify-content-center">
                     <div class="col-md-6">
-                        <div class='card profile-details-card'>
+                        <div class='card profile-details-card <?php echo ($_SESSION['admin']) ? 'admin-card' : ''; ?>'>
                             <div class='card-body'>
                                 <div class='user-profile'>
                                     <img src="../php/display_image.php" class="rounded-circle border" alt="Profile Picture" height="50">
