@@ -85,3 +85,18 @@ body {
 .card {
     padding: 0.5em;
 }
+
+.admin-card {
+    background-color: rgb(255, 214, 214);
+
+    .user-profile .rounded-circle {
+        transition: border-radius 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+        border-color: rgb(212, 186, 186) !important;
+    }
+
+    .user-profile .rounded-circle:hover {
+        border: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: 0 0 5pt 2pt #c2a7a7;
+    }
+}
