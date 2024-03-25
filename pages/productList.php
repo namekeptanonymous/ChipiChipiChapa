@@ -2,6 +2,13 @@
 
 <?php
 session_start();
+
+try {
+    $pdo = new PDO("mysql:host=localhost;dbname=newdb", "root", "");
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
 ?>
 
 <html lang="en">
@@ -64,9 +71,21 @@ session_start();
                     <form class="form-inline">
                         <div class="input-group">
                             <input type="text" class="form-control mr-sm-2" name="search" placeholder="Search">
+                            <select class="form-select" name="category">
+                                <option value="">All Categories</option>
+                                <?php
+                                $sql = 'SELECT id, name FROM categories';
+                                $stmt = $pdo->prepare($sql);
+                                $stmt->execute();
+                                while ($row = $stmt->fetch()) {
+                                    echo '<option value="' . $row['id'] . '">' . $row['name'] . '</option>';
+                                }
+                                ?>
+                            </select>
                             <select class="form-select" name="limit">
                                 <option value="5">5 items per page</option>
                                 <option value="10">10 items per page</option>
+                                <option value="20">20 items per page</option>
                             </select>
                             <button class="btn btn-outline-secondary my-2 my-sm-0 align-items-center justify-content-center" type="submit">
                                 <span class="material-symbols-outlined">search</span>
@@ -81,18 +100,21 @@ session_start();
                     <?php
                     if(isset($_GET['search'])) {
                         $search = $_GET['search'];
+                        $category = isset($_GET['category']) ? $_GET['category'] : ''; // Get selected category
                         $limit = isset($_GET['limit']) ? $_GET['limit'] : 5; 
-
-                        try {
-                            $pdo = new PDO("mysql:host=localhost;dbname=chipichipichapa", "root", "");
-                            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                        } catch (PDOException $e) {
-                            die("Connection failed: " . $e->getMessage());
+                    
+                        $sql = 'SELECT * FROM products WHERE name LIKE :search';
+                        if (!empty($category)) {
+                            // If a category is selected, add category filter to the query
+                            $sql .= ' AND id IN (SELECT productId FROM productcategory WHERE categoryId = :category)';
                         }
-
-                        $sql = 'SELECT * FROM products WHERE productName LIKE :search LIMIT :limit';
+                        $sql .= ' LIMIT :limit';
+                    
                         $stmt = $pdo->prepare($sql);
                         $stmt->bindValue(':search', '%' . $search . '%');
+                        if (!empty($category)) {
+                            $stmt->bindValue(':category', $category);
+                        }
                         $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
                         $stmt->execute();
 
@@ -101,21 +123,19 @@ session_start();
                             while ($row = $stmt->fetch()) {
                                 echo "<div class='col mb-4'>";
                                 echo "<div class='card'>";
-                                echo "<img src='../images/" . $row['imgPath'] . "' class='card-img-top' alt='" . $row['productName'] . "'>";
+                                echo "<img src='" . $row['image'] . "' class='card-img-top' alt='" . $row['name'] . "'>";
                                 echo "<div class='card-body'>";
-                                echo "<h5 class='card-title'><a href='product.php?pid=" . $row['pid'] . "'>" . $row['productName'] . "</a></h5>";
-                                echo "<p class='card-text'>Current Price: $" . $row['currPrice'] . "</p>";
-                                echo "<p class='card-text'>Highest Price: $" . $row['highestPrice'] . "</p>";
-                                echo "<p class='card-text'>Lowest Price: $" . $row['lowestPrice'] . "</p>";
+                                echo "<h5 class='card-title'><a href='product.php?pid=" . $row['id'] . "'>" . $row['name'] . "</a></h5>";
+                                echo "<p class='card-text'>Price: $" . $row['price'] . "</p>";
                                 echo "</div>";
                                 echo "</div>";
                                 echo "</div>";
                             }
                             echo "</div>";
+                        } else if (!($search == "")) {
+                            echo "<h3 class='text-center'>Sorry, no results for: " . $search . "</h3>";
                         }
-                        else if (!($search == "")) {
-                            echo "<h3 class='text-center'>Sorry, no results for: " . $search . "</h2>";
-                        }
+                        
 
                     } else {
                         echo "<p class='text-center'>No search query provided.</p>";
