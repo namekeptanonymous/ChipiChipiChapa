@@ -59,89 +59,122 @@ try {
             </div>
         </div>
     </nav>
-
-    <div id="main" class="container-fluid">
-        <div class="container-fluid" id="splash">
-            <p id="splash-text" class="text-center">
-                <span>Chipi</span><span id="splash-text-blue">Chipi</span><span id="splash-text-maroon">Chapa</span>
-            </p>
-            <br><br>
-            <div class="row justify-content-center">
-                <div class="col-md-6">
-                    <form class="form-inline">
-                        <div class="input-group">
-                            <input type="text" class="form-control mr-sm-2" name="search" placeholder="Search">
-                            <select class="form-select" name="category">
-                                <option value="">All Categories</option>
-                                <?php
-                                $sql = 'SELECT id, name FROM categories';
-                                $stmt = $pdo->prepare($sql);
-                                $stmt->execute();
-                                while ($row = $stmt->fetch()) {
-                                    echo '<option value="' . $row['id'] . '">' . $row['name'] . '</option>';
-                                }
-                                ?>
-                            </select>
-                            <select class="form-select" name="limit">
-                                <option value="5">5 items per page</option>
-                                <option value="10">10 items per page</option>
-                                <option value="20">20 items per page</option>
-                            </select>
-                            <button class="btn btn-outline-secondary my-2 my-sm-0 align-items-center justify-content-center" type="submit">
-                                <span class="material-symbols-outlined">search</span>
-                            </button>
-                        </div>
+    <div class="container-fluid" id="splash">
+        <p id="splash-text" class="text-center">
+            <span>Chipi</span><span id="splash-text-blue">Chipi</span><span id="splash-text-maroon">Chapa</span>
+        </p>
+        <br><br>
+        <div class="row justify-content-center">
+            <div class="col-md-6 d-flex justify-content-between"> <!-- Added d-flex and justify-content-between classes -->
+                <div>
+                    <!-- Filter Button -->
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filterModal">
+                        Filter
+                    </button>
+                </div>
+                <div>
+                    <!-- Search Bar -->
+                    <form id="searchForm" method="GET" class="d-flex">
+                        <input type="text" class="form-control me-2" name="search" placeholder="Search">
+                        <button type="submit" class="btn btn-outline-success">Search</button>
                     </form>
                 </div>
             </div>
-            
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <?php
-                    if(isset($_GET['search'])) {
-                        $search = $_GET['search'];
-                        $category = isset($_GET['category']) ? $_GET['category'] : ''; // Get selected category
-                        $limit = isset($_GET['limit']) ? $_GET['limit'] : 5; 
-                    
-                        $sql = 'SELECT * FROM products WHERE name LIKE :search';
-                        if (!empty($category)) {
-                            // If a category is selected, add category filter to the query
-                            $sql .= ' AND id IN (SELECT productId FROM productcategory WHERE categoryId = :category)';
-                        }
-                        $sql .= ' LIMIT :limit';
-                    
-                        $stmt = $pdo->prepare($sql);
-                        $stmt->bindValue(':search', '%' . $search . '%');
-                        if (!empty($category)) {
-                            $stmt->bindValue(':category', $category);
-                        }
-                        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
-                        $stmt->execute();
+        </div>
 
-                        if($stmt->rowCount()>0 && !($search == "")){
-                            echo "<div class='row row-cols-1 row-cols-md-2 row-cols-lg-3' id=results>";
-                            while ($row = $stmt->fetch()) {
-                                echo "<div class='col mb-4'>";
-                                echo "<div class='card'>";
-                                echo "<img src='" . $row['image'] . "' class='card-img-top' alt='" . $row['name'] . "'>";
-                                echo "<div class='card-body'>";
-                                echo "<h5 class='card-title'><a href='product.php?pid=" . $row['id'] . "'>" . $row['name'] . "</a></h5>";
-                                echo "<p class='card-text'>Price: $" . $row['price'] . "</p>";
-                                echo "</div>";
-                                echo "</div>";
-                                echo "</div>";
-                            }
-                            echo "</div>";
-                        } else if (!($search == "")) {
-                            echo "<h3 class='text-center'>Sorry, no results for: " . $search . "</h3>";
-                        }
-                        
-
-                    } else {
-                        echo "<p class='text-center'>No search query provided.</p>";
-                    }
-                    ?>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <!-- Filter Modal -->
+                <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="filterModalLabel">Filter Products</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="filterForm">
+                                    <div class="mb-3">
+                                        <label for="category" class="form-label">Category</label>
+                                        <select class="form-select" name="category" id="category">
+                                            <option value="">All Categories</option>
+                                            <?php
+                                            $sql = 'SELECT DISTINCT c.id, c.name FROM categories c JOIN subcategories sc ON c.id = sc.categoryId';
+                                            $stmt = $pdo->prepare($sql);
+                                            $stmt->execute();
+                                            while ($row = $stmt->fetch()) {
+                                                echo '<option value="' . $row['id'] . '">' . $row['name'] . '</option>';
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="subcategory" class="form-label">Subcategory</label>
+                                        <select class="form-select" name="subcategory" id="subcategory">
+                                            <option value="">Select a Category First</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="limit" class="form-label">Items per page</label>
+                                        <select class="form-select" name="limit" id="limit">
+                                            <option value="5">5 items per page</option>
+                                            <option value="10">10 items per page</option>
+                                            <option value="20">20 items per page</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Apply Filters</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            </div>
+        </div>
+            
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <?php
+                if(isset($_GET['search'])) {
+                    $search = $_GET['search'];
+                    $category = isset($_GET['category']) ? $_GET['category'] : ''; // Get selected category
+                    $limit = isset($_GET['limit']) ? $_GET['limit'] : 20; 
+                    
+                    $sql = 'SELECT * FROM products WHERE name LIKE :search';
+                    if (!empty($category)) {
+                        // If a category is selected, add category filter to the query
+                        $sql .= ' AND id IN (SELECT productId FROM productcategory WHERE categoryId = :category)';
+                    }
+                    $sql .= ' LIMIT :limit';
+                    
+                    $stmt = $pdo->prepare($sql);
+                    $stmt->bindValue(':search', '%' . $search . '%');
+                    if (!empty($category)) {
+                        $stmt->bindValue(':category', $category);
+                    }
+                    $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+                    $stmt->execute();
+
+                    if($stmt->rowCount()>0 && !($search == "")){
+                        echo "<div class='row row-cols-2 row-cols-md-3 row-cols-lg-5' id=results>";
+                        while ($row = $stmt->fetch()) {
+                            echo "<div class='col mb-4'>";
+                            echo "<div class='card'>";
+                            echo "<img src='" . $row['image'] . "' class='card-img-top' alt='" . $row['name'] . "'>";
+                            echo "<div class='card-body'>";
+                            echo "<h5 class='card-title'><a href='product.php?pid=" . $row['id'] . "'>" . $row['name'] . "</a></h5>";
+                            echo "<p class='card-text'>Price: $" . $row['price'] . "</p>";
+                            echo "</div>";
+                            echo "</div>";
+                            echo "</div>";
+                        }
+                        echo "</div>";
+                    } else if (!($search == "")) {
+                        echo "<h3 class='text-center'>Sorry, no results for: " . $search . "</h3>";
+                    }
+                } else {
+                    echo "<p class='text-center'>No search query provided.</p>";
+                }
+                ?>
             </div>
         </div>
     </div>
@@ -154,5 +187,46 @@ try {
         </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <script>
+    document.getElementById('category').addEventListener('change', function() {
+        var categoryId = this.value;
+        if (categoryId !== '') {
+            var formData = new FormData();
+            formData.append('categoryId', categoryId);
+
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        document.getElementById('subcategory').innerHTML = xhr.responseText;
+                    } else {
+                        console.error('Request failed:', xhr.status);
+                    }
+                }
+            };
+            xhr.open('POST', 'getSubcategories.php', true);
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest'); // Set the correct header
+            xhr.send(formData);
+        }
+    });
+
+    function submitForm() {
+        const urlParams = new URLSearchParams(window.location.search);
+        var search = urlParams.get('search');
+        var category = document.getElementById('category').value;
+        var limit = document.getElementById('limit').value;
+        var selectedSubcategory = document.getElementById('subcategory').value;
+        var url = 'productList.php?search=' + encodeURIComponent(search) + '&category=' + encodeURIComponent(selectedSubcategory) + '&limit=' + encodeURIComponent(limit);
+
+        window.location.href = url;
+    }
+
+    document.getElementById('filterForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        submitForm();
+    });
+</script>
 </body>
 </html>
+
