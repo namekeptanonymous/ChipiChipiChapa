@@ -34,7 +34,7 @@ session_start();
                         // Check if profile picture data is available in session
                         if (isset($_SESSION['profilePicture'])) {
                             // Use the display_image.php script as the src attribute
-                            echo '<img src="php/display_image.php" height="24" alt="Profile Picture" class="material-symbols-outlined">';
+                            echo '<img src="php/display_image.php" height="24" alt="Profile Picture" class="material-symbols-outlined rounded-circle border">';
                         } else {
                             // If profile picture data is not available, display a placeholder image or text
                             echo '<span class="material-symbols-outlined">account_circle</span>';
@@ -43,6 +43,7 @@ session_start();
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="userDropdown">
                         <li><a class="dropdown-item" href="pages/user_profile.php">User Profile</a></li>
+                        <?php echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="pages/manage_users.php">Manage Users</a></li>' : '';?>
                         <li><a class="dropdown-item" href="php/logout.php?return=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                     </ul>
                 </div>
@@ -67,9 +68,9 @@ session_start();
                     <div class="col-md-6 d-flex align-items-center justify-content-center">
                         <form class="form-inline" action="pages/productList.php" method="get">
                             <div class="input-group">
-                                <input type="text" class="form-control mr-sm-2" placeholder="Search" name="search" />
+                                <input type="text" class="form-control mr-sm-2" placeholder="Search" name="search"/>
                                 <button class="btn btn-outline-secondary my-2 my-sm-0 d-flex
-                                    align-items-center justify-content-center" type="submit" style="padding: 6px">
+                                align-items-center justify-content-center" type="submit" style="padding: 6px">
                                     <span class="material-symbols-outlined">search</span>
                                 </button>
                             </div>

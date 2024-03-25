@@ -47,6 +47,7 @@ try {
         if ($stmt->execute()) {
             // User successfully registered, set session variables
             $_SESSION['logged_in'] = true;
+            $_SESSION['userId'] = $newUserId;
             $_SESSION['userName'] = $userName;
             $_SESSION['email'] = $email;
             $_SESSION['profilePicture'] = $profilePicture;
@@ -55,7 +56,7 @@ try {
             echo "<script>alert('User $userName has registered successfully.'); window.location.href = '../index.php';</script>";
 
         } else {
-            echo "<script>alert('Error: Something went wrong. User registration failed, please check that you have entered all of the requested information.'); window.location.href = '../index.php';</script>";
+            echo "<script>alert('Error: Something went wrong. User registration failed, please check that you have entered a unique e-mail address that has never been used before.'); window.history.back();</script>";
         }
 
         // Close statement
@@ -63,6 +64,7 @@ try {
     }
 } catch(PDOException $e) {
     echo "Connection failed: " . $e->getMessage();
+    echo "<script>alert('Error: Something went wrong. User registration failed, please check that you have entered a unique e-mail address that has never been used before.'); window.history.back();</script>";
 }
 
 // Close connection

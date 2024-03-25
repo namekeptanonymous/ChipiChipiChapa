@@ -36,13 +36,19 @@ try {
 
             // Verify password
             if (password_verify($password, $user['password'])) {
+                $userName = $user['userName'];
+                if (!$user['enabled']) {
+                    echo "<script>alert('Your account $userName with email $email is disabled. Please contact an administrator to have your account reinstated.'); window.location.href = '../index.php';</script>";
+                    exit();
+                }
                 // Password is correct, set session variables
                 $_SESSION['logged_in'] = true;
+                $_SESSION['userId'] = $user['userid'];
                 $_SESSION['userName'] = $user['userName'];
                 $_SESSION['email'] = $user['email'];
                 $_SESSION['profilePicture'] = $user['profilePicture'];
                 $_SESSION['admin'] = ($user['admin']===0) ? false : true;
-                $userName = $_SESSION['userName'];
+                
 
                 if ($_SESSION['admin']) {
                     echo "<script>alert('Admin $userName with email $email has logged in successfully.'); window.location.href = '../index.php';</script>";

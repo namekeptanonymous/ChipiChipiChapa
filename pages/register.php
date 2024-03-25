@@ -26,7 +26,7 @@ if (isset($_SESSION['profilePicture'])) {
             <div class="navbar-nav text-center d-flex align-items-center justify-content-center">
                 <form class="form-inline" action="./productList.php" method="get">
                     <div class="input-group">
-                        <input type="text" class="form-control mr-sm-2" placeholder="Search" />
+                        <input type="text" class="form-control mr-sm-2" placeholder="Search" name="search"/>
                         <button class="btn btn-outline-secondary my-2 my-sm-0 d-flex
                         align-items-center justify-content-center" type="submit" style="padding: 6px">
                             <span class="material-symbols-outlined">search</span>

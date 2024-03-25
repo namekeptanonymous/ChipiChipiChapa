@@ -2,39 +2,43 @@
 
 <?php
 session_start();
-
-try {
-    $pdo = new PDO("mysql:host=localhost;dbname=newdb", "root", "");
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Connection failed: " . $e->getMessage());
+if (isset($_SESSION['profilePicture'])) {
+    header("Location: ../index.php");
+    exit();
 }
 ?>
 
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChipiChipiChapa</title>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
-    <link rel="stylesheet" href="../css/productList.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="../css/register.css" />
     <link rel="icon" type="image/x-icon" href="../images/icon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ChipiChipiChapa</title>
 </head>
 <body>
-    <nav class="navbar sticky-top navbar-expand-md navbar-light bg-light">
+    <nav class="navbar sticky-top navbar-expand-md">
         <div class="container-fluid">
-            <a class="navbar-brand" href="../index.php">
-                <img src="../images/longbanner.png" height="38" class="d-inline-block align-top brand-image" alt="">
-            </a>
+            <a class="navbar-brand" href="../index.php"><img src="../images/longbanner.png" height="38" class="d-inline-block align-top brand-image" alt="" /></a>
             <div class="navbar-nav text-center d-flex align-items-center justify-content-center">
+                <form class="form-inline" action="./productList.php" method="get">
+                    <div class="input-group">
+                        <input type="text" class="form-control mr-sm-2" placeholder="Search" name="search"/>
+                        <button class="btn btn-outline-secondary my-2 my-sm-0 d-flex
+                        align-items-center justify-content-center" type="submit" style="padding: 6px">
+                            <span class="material-symbols-outlined">search</span>
+                        </button>
+                    </div>
+                </form>
                 <?php
                     // Check if profile picture data is available in session
                     if (isset($_SESSION['profilePicture'])) {
                         echo '';
                     } else {
-                        echo '<a class="nav-link" href="./login.php">Login</a>or<a class="nav-link" href="./register.php">Register</a>';
+                        echo '<a class="nav-link" href="./login.php">Login</a>or<a class="nav-link disabled" href="./register.php">Register</a>';
                     }
                 ?>
                 <div class="dropdown <?php echo isset($_SESSION['userName']) ? '' : 'd-none'; ?>" id="dropdown">
@@ -59,124 +63,41 @@ try {
             </div>
         </div>
     </nav>
-    <div class="container-fluid" id="splash">
-        <p id="splash-text" class="text-center">
-            <span>Chipi</span><span id="splash-text-blue">Chipi</span><span id="splash-text-maroon">Chapa</span>
-        </p>
-        <br><br>
-        <div class="row justify-content-center">
-            <div class="col-md-6 d-flex justify-content-between"> <!-- Added d-flex and justify-content-between classes -->
-                <div>
-                    <!-- Filter Button -->
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filterModal">
-                        Filter
-                    </button>
-                </div>
-                <div>
-                    <!-- Search Bar -->
-                    <form id="searchForm" method="GET" class="d-flex">
-                        <input type="text" class="form-control me-2" name="search" placeholder="Search">
-                        <button type="submit" class="btn btn-outline-success">Search</button>
+
+    <div id="main">
+        <div class="container-fluid text-center" id="register-body">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <form method="POST" id="register-form" action="../php/register.php" enctype="multipart/form-data">
+                        <fieldset>
+                            <div class="card register-card">
+                                <div class="card-body">
+                                    <h3 class="card-title">Register</h3><br>
+
+                                    <label for="name">Name:</label><br>
+                                    <input type="text" id="name" name="name"><br><br>
+
+                                    <label for="email">Email:</label><br>
+                                    <input type="email" id="email" name="email" placeholder="example@gmail.com"><br><br>
+                        
+                                    <label for="passw">Password:</label><br>
+                                    <input type="password" id="passw" name="passw"><br><br>
+
+                                    <label for="passw-rpt">Password (repeat):</label><br>
+                                    <input type="password" id="passw-rpt" name="passw-rpt"><br><br>
+
+                                    <label for="profile-pic" id="profile-pic-label">Profile Picture (file must be a .png):</label><br>
+                                    <input type="file" id="profile-pic" name="profile-pic"><br><br>
+                        
+                                    <input type="submit" value="Submit" class="btn btn-success" id="submit-btn">
+                                </div>
+                            </div>
+                        </fieldset>
                     </form>
                 </div>
             </div>
         </div>
-
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <!-- Filter Modal -->
-                <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="filterModalLabel">Filter Products</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form id="filterForm">
-                                    <div class="mb-3">
-                                        <label for="category" class="form-label">Category</label>
-                                        <select class="form-select" name="category" id="category">
-                                            <option value="">All Categories</option>
-                                            <?php
-                                            $sql = 'SELECT DISTINCT c.id, c.name FROM categories c JOIN subcategories sc ON c.id = sc.categoryId';
-                                            $stmt = $pdo->prepare($sql);
-                                            $stmt->execute();
-                                            while ($row = $stmt->fetch()) {
-                                                echo '<option value="' . $row['id'] . '">' . $row['name'] . '</option>';
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="subcategory" class="form-label">Subcategory</label>
-                                        <select class="form-select" name="subcategory" id="subcategory">
-                                            <option value="">Select a Category First</option>
-                                        </select>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="limit" class="form-label">Items per page</label>
-                                        <select class="form-select" name="limit" id="limit">
-                                            <option value="5">5 items per page</option>
-                                            <option value="10">10 items per page</option>
-                                            <option value="20">20 items per page</option>
-                                        </select>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Apply Filters</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-            
-        <div class="row justify-content-center">
-            <div class="col-md-12">
-                <?php
-                if(isset($_GET['search'])) {
-                    $search = $_GET['search'];
-                    $category = isset($_GET['category']) ? $_GET['category'] : ''; // Get selected category
-                    $limit = isset($_GET['limit']) ? $_GET['limit'] : 20; 
-                    
-                    $sql = 'SELECT * FROM products WHERE name LIKE :search';
-                    if (!empty($category)) {
-                        // If a category is selected, add category filter to the query
-                        $sql .= ' AND id IN (SELECT productId FROM productcategory WHERE categoryId = :category)';
-                    }
-                    $sql .= ' LIMIT :limit';
-                    
-                    $stmt = $pdo->prepare($sql);
-                    $stmt->bindValue(':search', '%' . $search . '%');
-                    if (!empty($category)) {
-                        $stmt->bindValue(':category', $category);
-                    }
-                    $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
-                    $stmt->execute();
-
-                    if($stmt->rowCount()>0 && !($search == "")){
-                        echo "<div class='row row-cols-2 row-cols-md-3 row-cols-lg-5' id=results>";
-                        while ($row = $stmt->fetch()) {
-                            echo "<div class='col mb-4'>";
-                            echo "<div class='card'>";
-                            echo "<img src='" . $row['image'] . "' class='card-img-top' alt='" . $row['name'] . "'>";
-                            echo "<div class='card-body'>";
-                            echo "<h5 class='card-title'><a href='product.php?pid=" . $row['id'] . "'>" . $row['name'] . "</a></h5>";
-                            echo "<p class='card-text'>Price: $" . $row['price'] . "</p>";
-                            echo "</div>";
-                            echo "</div>";
-                            echo "</div>";
-                        }
-                        echo "</div>";
-                    } else if (!($search == "")) {
-                        echo "<h3 class='text-center'>Sorry, no results for: " . $search . "</h3>";
-                    }
-                } else {
-                    echo "<p class='text-center'>No search query provided.</p>";
-                }
-                ?>
-            </div>
-        </div>
+        <br>
     </div>
 
     <footer class="footer text-center py-3">
@@ -186,47 +107,61 @@ try {
             </div>
         </div>
     </footer>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
     <script>
-    document.getElementById('category').addEventListener('change', function() {
-        var categoryId = this.value;
-        if (categoryId !== '') {
-            var formData = new FormData();
-            formData.append('categoryId', categoryId);
-
-            var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        document.getElementById('subcategory').innerHTML = xhr.responseText;
-                    } else {
-                        console.error('Request failed:', xhr.status);
-                    }
+        var email_pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        var email = document.getElementById("email");
+        var passw = document.getElementById("passw");
+        var submit_btn = document.getElementById("submit-btn");
+        submit_btn.disabled = true;
+        var email_flag = false;
+        var passw_flag = false;
+        email.addEventListener("blur", function(e) {
+            if (!email_pattern.test(email.value) && !(email.value == null || email.value == "")) {
+                email.style.border = "3px solid red";
+                email.style.borderRadius = "0.25rem";
+                email_flag = false;
+                submit_btn.disabled = true;
+            } else {
+                email.style = "";
+                email_flag = true;
+                if (email_flag && passw_flag) {
+                    submit_btn.disabled = false;
                 }
-            };
-            xhr.open('POST', 'getSubcategories.php', true);
-            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest'); // Set the correct header
-            xhr.send(formData);
+            }
+        });
+        passw.addEventListener("change", function(e) {
+            if (passw.value != null && passw.value != "") {
+                passw.style = "";
+                passw_flag = true;
+                if (email_flag && passw_flag) {
+                    submit_btn.disabled = false;
+                }
+            } else {
+                passw.style.border = "3px solid red";
+                passw.style.borderRadius = "0.25rem";
+                passw_flag = false;
+                submit_btn.disabled = true;
+            }
+        });
+
+        document.getElementById("register-form").onsubmit = function(e){
+            if (email.value == null || email.value == "") {
+                e.preventDefault();
+                alert("Please enter an e-mail address.")
+            } else if (!email_pattern.test(email.value)) {
+                e.preventDefault();
+                alert("Please enter a valid e-mail address.")
+            } else if (passw.value == null || passw.value == "") {
+                e.preventDefault();
+                alert("Please enter a password.")
+            }
         }
-    });
+    </script>
 
-    function submitForm() {
-        const urlParams = new URLSearchParams(window.location.search);
-        var search = urlParams.get('search');
-        var category = document.getElementById('category').value;
-        var limit = document.getElementById('limit').value;
-        var selectedSubcategory = document.getElementById('subcategory').value;
-        var url = 'productList.php?search=' + encodeURIComponent(search) + '&category=' + encodeURIComponent(selectedSubcategory) + '&limit=' + encodeURIComponent(limit);
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+    </script>
 
-        window.location.href = url;
-    }
-
-    document.getElementById('filterForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        submitForm();
-    });
-</script>
 </body>
 </html>
-
