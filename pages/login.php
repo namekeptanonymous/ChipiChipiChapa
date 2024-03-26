@@ -123,7 +123,7 @@ if (isset($_SESSION['profilePicture'])) {
                 }
             }
         });
-        passw.addEventListener("change", function(e) {
+        passw.addEventListener("blur", function(e) {
             if (passw.value != null && passw.value != "") {
                 passw.style = "";
                 passw_flag = true;

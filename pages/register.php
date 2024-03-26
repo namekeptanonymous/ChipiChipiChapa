@@ -135,7 +135,7 @@ if (isset($_SESSION['profilePicture'])) {
             }
         });
 
-        passw.addEventListener("change", function(e) {
+        passw.addEventListener("blur", function(e) {
             if (passw.value != null && passw.value != "") {
                 passw.style = "";
                 passw_flag = true;
@@ -150,7 +150,7 @@ if (isset($_SESSION['profilePicture'])) {
             }
         });
 
-        profilePic.addEventListener("change", function(e) {
+        profilePic.addEventListener("blur", function(e) {
             if (profilePic.files.length > 0) {
                 profile_pic_flag = true;
                 if (email_flag && passw_flag && profile_pic_flag) {
