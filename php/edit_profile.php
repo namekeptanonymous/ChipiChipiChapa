@@ -76,6 +76,7 @@
                     ?><?php echo isset($_SESSION['userName']) ? $_SESSION['userName'] : 'User'; ?>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="../pages/user_profile.php">User Profile</a></li>
                         <?php echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="../pages/manage_users.php">Manage Users</a></li>' : '';?>
                         <li><a class="dropdown-item" href="./logout.php?return=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                     </ul>

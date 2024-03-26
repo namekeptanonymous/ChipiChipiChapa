@@ -112,10 +112,14 @@ if (isset($_SESSION['profilePicture'])) {
         var email_pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         var email = document.getElementById("email");
         var passw = document.getElementById("passw");
+        var passwRpt = document.getElementById('passw-rpt');
+        var profilePic = document.getElementById("profile-pic");
         var submit_btn = document.getElementById("submit-btn");
         submit_btn.disabled = true;
         var email_flag = false;
         var passw_flag = false;
+        var profile_pic_flag = false;
+
         email.addEventListener("blur", function(e) {
             if (!email_pattern.test(email.value) && !(email.value == null || email.value == "")) {
                 email.style.border = "3px solid red";
@@ -125,16 +129,17 @@ if (isset($_SESSION['profilePicture'])) {
             } else {
                 email.style = "";
                 email_flag = true;
-                if (email_flag && passw_flag) {
+                if (email_flag && passw_flag && profile_pic_flag) {
                     submit_btn.disabled = false;
                 }
             }
         });
+
         passw.addEventListener("change", function(e) {
             if (passw.value != null && passw.value != "") {
                 passw.style = "";
                 passw_flag = true;
-                if (email_flag && passw_flag) {
+                if (email_flag && passw_flag && profile_pic_flag) {
                     submit_btn.disabled = false;
                 }
             } else {
@@ -145,6 +150,17 @@ if (isset($_SESSION['profilePicture'])) {
             }
         });
 
+        profilePic.addEventListener("change", function(e) {
+            if (profilePic.files.length > 0) {
+                profile_pic_flag = true;
+                if (email_flag && passw_flag && profile_pic_flag) {
+                    submit_btn.disabled = false;
+                }
+            } else {
+                profile_pic_flag = false;
+                submit_btn.disabled = true;
+            }
+        });
         document.getElementById("register-form").onsubmit = function(e){
             if (email.value == null || email.value == "") {
                 e.preventDefault();
@@ -155,9 +171,17 @@ if (isset($_SESSION['profilePicture'])) {
             } else if (passw.value == null || passw.value == "") {
                 e.preventDefault();
                 alert("Please enter a password.")
+            } else if (profilePic.files.length === 0) {
+                e.preventDefault();
+                alert("Please select a profile picture.")
+            } else if (passw.value !== passwRpt.value) {
+                alert('The password and repeat password must match.');
+                e.preventDefault();
+                return;
             }
         }
     </script>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">

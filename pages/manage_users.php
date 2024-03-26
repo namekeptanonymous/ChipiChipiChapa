@@ -71,6 +71,25 @@ if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
             <div class="container-fluid">
                 <div class="row justify-content-center">
                     <div class="col-md-8">
+                        <form class="form-inline mb-3" action="" method="GET">
+                            <div class="input-group">
+                                <select class="form-select" name="search_type" style="width:5em">
+                                    <option value="" selected disabled>Filter</option>
+                                    <option value="username" <?php echo ($_GET['search_type']==='username') ? 'selected' : '';?>>Username</option>
+                                    <option value="email" <?php echo ($_GET['search_type']==='email') ? 'selected' : '';?>>Email</option>
+                                </select>
+                                <input type="text" class="form-control" name="search"
+                                    placeholder="Search by name" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>"
+                                    style="width: 50%">
+                                <button class="btn btn-outline-success my-2 my-sm-0 d-flex align-items-center justify-content-center" type="submit">
+                                    <span class="material-symbols-outlined">search</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
                         <?php
                             try {
                                 $pdo = new PDO("mysql:host=localhost;dbname=chipichipichapa", "root", "");
@@ -79,42 +98,55 @@ if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
                                 die("Connection failed: " . $e->getMessage());
                             }
 
-                            // Query to select all users
-                            $sql = 'SELECT * FROM users';
-                            $stmt = $pdo->query($sql);
-
-                            // Check if there are users
-                            if($stmt->rowCount() > 0) {
-                                echo "<div class='row' id='user-cards'>";
-                                // Iterate over each user
-                                while ($row = $stmt->fetch()) {
-                                    echo "<div class='col mb-4'>";
-                                    echo "<div class='card" . (($row['enabled']) ? '' : ' disabled-card') . "'>";
-                                    echo "<div class='card-body'>";
-                                    
-                                    $_SESSION['manageUserPicture'] = $row['profilePicture'];
-                                    echo "<div class='d-flex align-items-center justify-content-center'>";
-                                    echo "<img src='../php/png_image.php?id=" . $row['userid'] . "' class='rounded-circle border' alt='User Picture' height='50' style='margin-right: 0.5em'>";
-                                    echo "<h5 class='card-title'>" . $row['userName'] . (($row['enabled']) ? '' : ' [disabled]') . "</h5>";
-                                    // More user information here if needed
-                                    echo "<a href='../php/disable_profile.php?id=" . $row['userid'] . "'><button class='btn btn-outline-danger my-2 my-sm-0 d-flex align-items-center justify-content-center' style='padding: 6px; margin: 0em 0.5em 0em 0.5em''>
-                                        <span class='material-symbols-outlined'>power_settings_new</span>
-                                    </button></a>";
-                                    echo "<a href='../php/edit_profile.php?id=" . $row['userid'] . "'><button class='btn btn-outline-primary my-2 my-sm-0 d-flex align-items-center justify-content-center' style='padding: 6px; margin-right: 0.5em'>
-                                        <span class='material-symbols-outlined'>edit</span>
-                                    </button></a>";
-                                    echo "<a href='../php/delete_profile.php?id=" . $row['userid'] . "'><button class='btn btn-outline-danger my-2 my-sm-0 d-flex align-items-center justify-content-center' style='padding: 6px'>
-                                        <span class='material-symbols-outlined'>delete</span>
-                                    </button></a>";
-                                    echo "</div>";
-
-                                    echo "</div>";
-                                    echo "</div>";
-                                    echo "</div>";
+                            if (isset($_GET['search'])) {
+                                if (isset($_GET['search_type'])) {
+                                    if ($_GET['search_type']==="email") {
+                                        $sql = 'SELECT * FROM users WHERE email LIKE "%' . $_GET['search'] . '%"';
+                                    } else {
+                                        $sql = 'SELECT * FROM users WHERE userName LIKE "%' . $_GET['search'] . '%"';
+                                    }
+                                } else {
+                                    $sql = 'SELECT * FROM users WHERE userName LIKE "%' . $_GET['search'] . '%"';
                                 }
-                                echo "</div>";
                             } else {
-                                echo "<h3 class='text-center'>No users found.</h3>";
+                                echo 'Please search to be able to see users!';
+                                $stopSearch = true;
+                            }
+
+                            if (!isset($stopSearch)) {
+                                $stmt = $pdo->query($sql);
+                                if($stmt->rowCount() > 0) {
+                                    echo "<div class='row' id='user-cards'>";
+                                    // Iterate over each user
+                                    while ($row = $stmt->fetch()) {
+                                        echo "<div class='col mb-4'>";
+                                        echo "<div class='card" . (($row['enabled']) ? '' : ' disabled-card') . "'>";
+                                        echo "<div class='card-body'>";
+                                        
+                                        $_SESSION['manageUserPicture'] = $row['profilePicture'];
+                                        echo "<div class='d-flex align-items-center justify-content-center'>";
+                                        echo "<img src='../php/png_image.php?id=" . $row['userid'] . "' class='rounded-circle border' alt='User Picture' height='50' style='margin-right: 0.5em'>";
+                                        echo "<h5 class='card-title'>" . $row['userName'] . (($row['enabled']) ? '' : ' [disabled]') . "</h5>";
+                                        // More user information here if needed
+                                        echo "<a href='../php/disable_profile.php?id=" . $row['userid'] . "'><button class='btn btn-outline-danger my-2 my-sm-0 d-flex align-items-center justify-content-center' style='padding: 6px; margin: 0em 0.5em 0em 0.5em''>
+                                            <span class='material-symbols-outlined'>power_settings_new</span>
+                                        </button></a>";
+                                        echo "<a href='../php/edit_profile.php?id=" . $row['userid'] . "'><button class='btn btn-outline-primary my-2 my-sm-0 d-flex align-items-center justify-content-center' style='padding: 6px; margin-right: 0.5em'>
+                                            <span class='material-symbols-outlined'>edit</span>
+                                        </button></a>";
+                                        echo "<a href='../php/delete_profile.php?id=" . $row['userid'] . "'><button class='btn btn-outline-danger my-2 my-sm-0 d-flex align-items-center justify-content-center' style='padding: 6px'>
+                                            <span class='material-symbols-outlined'>delete</span>
+                                        </button></a>";
+                                        echo "</div>";
+    
+                                        echo "</div>";
+                                        echo "</div>";
+                                        echo "</div>";
+                                    }
+                                    echo "</div>";
+                                } else {
+                                    echo "<h3 class='text-center'>No users found.</h3>";
+                                }
                             }
                         ?>
                     </div>
