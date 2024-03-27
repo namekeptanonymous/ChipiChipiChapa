@@ -77,6 +77,7 @@ if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
                                 <option value="" selected disabled>Filter</option>
                                 <option value="username" <?php echo (isset($_GET['search_type']) && $_GET['search_type']==='username') ? 'selected' : '';?>>Username</option>
                                 <option value="email" <?php echo (isset($_GET['search_type']) && $_GET['search_type']==='email') ? 'selected' : '';?>>Email</option>
+                                <option value="comment" <?php echo (isset($_GET['search_type']) && $_GET['search_type']==='comment') ? 'selected' : '';?>>Comment</option>
                             </select>
                             <input type="text" class="form-control" name="search"
                                 placeholder="Search by name" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>"
@@ -102,6 +103,8 @@ if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
                         if (isset($_GET['search_type'])) {
                             if ($_GET['search_type']==="email") {
                                 $sql = 'SELECT * FROM users WHERE email LIKE "%' . $_GET['search'] . '%"';
+                            } else if ($_GET['search_type']==="comment") {
+                                $sql = 'SELECT DISTINCT * FROM users JOIN comments ON users.userid=comments.userid WHERE commentText LIKE "%' . $_GET['search'] . '%"';
                             } else {
                                 $sql = 'SELECT * FROM users WHERE userName LIKE "%' . $_GET['search'] . '%"';
                             }
@@ -138,7 +141,7 @@ if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
                                     <span class='material-symbols-outlined'>delete</span>
                                 </button></a>";
                                 // Add a link to view user's comments
-                                echo "<a href='../php/view_user_comments.php?userId=" . $row['userid'] . "' class='btn btn-outline-primary my-2 my-sm-0 d-flex align-items-center justify-content-center' style='padding: 6px;'>
+                                echo "<a href='./view_user_comments.php?userId=" . $row['userid'] . "' class='btn btn-outline-primary my-2 my-sm-0 d-flex align-items-center justify-content-center' style='padding: 6px;'>
                                     Comments
                                 </a>";
 
