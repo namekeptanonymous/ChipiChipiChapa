@@ -75,8 +75,8 @@ if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
                             <div class="input-group">
                                 <select class="form-select" name="search_type" style="width:5em">
                                     <option value="" selected disabled>Filter</option>
-                                    <option value="username" <?php echo ($_GET['search_type']==='username') ? 'selected' : '';?>>Username</option>
-                                    <option value="email" <?php echo ($_GET['search_type']==='email') ? 'selected' : '';?>>Email</option>
+                                    <option value="username" <?php echo (isset($_GET['search_type']) && $_GET['search_type']==='username') ? 'selected' : '';?>>Username</option>
+                                    <option value="email" <?php echo (isset($_GET['search_type']) && $_GET['search_type']==='email') ? 'selected' : '';?>>Email</option>
                                 </select>
                                 <input type="text" class="form-control" name="search"
                                     placeholder="Search by name" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>"
