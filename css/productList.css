@@ -107,3 +107,15 @@ body {
     flex-wrap: wrap;
     justify-content: space-around;
 }
+
+.commentText {
+    transition: background-color 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+.commentText:hover {
+    background-color: #f0f0f0 !important;
+}
+
+.delete {
+    border: none;
+    width: 0em;
+}

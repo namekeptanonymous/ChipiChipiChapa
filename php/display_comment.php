@@ -29,8 +29,42 @@ while ($row = $stmt->fetch()) {
     $row2 = $stmt2->fetch();
     echo "<tr>";
     echo "<td> " . $row2['userName'] . "</td> ";
-    echo "<td> " . $row['commentText'] . "</td> ";
+    if (isset($_SESSION['admin']) && $_SESSION['admin']) {
+        echo "<td class='commentText' onclick='editComment(this, " . $row['commentId'] . ")'> " . $row['commentText'] . "</td> ";
+    } else {
+        echo "<td> " . $row['commentText'] . "</td> ";
+    }
     echo "<td> " . $row['timestamp'] . "</td> ";
+    if (isset($_SESSION['admin']) && $_SESSION['admin']) {
+        echo "<td class='delete'><a href='../php/delete_comment.php?id=" . $row['commentId'] . "' style='text-decoration: none'>
+        <button class='btn btn-outline-danger my-2 my-sm-0 d-flex align-items-center justify-content-center' style='padding: 6px'>
+        <span class='material-symbols-outlined'>delete</span></button></a></td>";
+    }
     echo "</tr>";
+    
 }
 ?>
+
+<script>
+    function editComment(element, commentid) {
+    var newText = prompt("Enter new comment text:", element.innerText.trim());
+    if (newText !== null) {
+        $.ajax({
+            url: '../php/update_comment.php',
+            method: 'POST',
+            data: { commentId: commentid, newText: newText },
+            success: function(response) {
+                if (response === 'success') {
+                    element.innerText = newText;
+                    alert('Comment $commentId updated!');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
+                alert('An error occurred while updating the comment.' + error);
+            }
+        });
+    }
+}
+
+</script>
