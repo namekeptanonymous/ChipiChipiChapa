@@ -21,7 +21,7 @@ try {
         $commentText = $_POST['commentText'];
         $userId = $_POST['userId'];
         $pid = $_POST['pid'];
-        $time = date("Y/M/D");
+        $time = date("Y-m-d H:i:s");
 
         // Check if all required fields are provided
         if (!empty($commentText) ) {
