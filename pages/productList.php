@@ -75,7 +75,7 @@ try {
                 <div>
                     <!-- Search Bar -->
                     <form id="searchForm" method="GET" class="d-flex">
-                        <input type="text" class="form-control me-2" name="search" placeholder="Search">
+                        <input type="text" class="form-control me-2" name="search" placeholder="Search" id="searchInput">
                         <button type="submit" class="btn btn-outline-success">Search</button>
                     </form>
                 </div>
@@ -131,51 +131,51 @@ try {
             </div>
         </div>
             
-        <div class="row justify-content-center">
-            <div class="col-md-12">
-                <?php
-                if(isset($_GET['search'])) {
-                    $search = $_GET['search'];
-                    $category = isset($_GET['category']) ? $_GET['category'] : ''; // Get selected category
-                    $limit = isset($_GET['limit']) ? $_GET['limit'] : 20; 
-                    
-                    $sql = 'SELECT * FROM products WHERE name LIKE :search';
-                    if (!empty($category)) {
-                        // If a category is selected, add category filter to the query
-                        $sql .= ' AND id IN (SELECT productId FROM productcategory WHERE categoryId = :category)';
-                    }
-                    $sql .= ' LIMIT :limit';
-                    
-                    $stmt = $pdo->prepare($sql);
-                    $stmt->bindValue(':search', '%' . $search . '%');
-                    if (!empty($category)) {
-                        $stmt->bindValue(':category', $category);
-                    }
-                    $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
-                    $stmt->execute();
-
-                    if($stmt->rowCount()>0 && !($search == "")){
-                        echo "<div class='row row-cols-2 row-cols-md-3 row-cols-lg-5' id=results>";
-                        while ($row = $stmt->fetch()) {
-                            echo "<div class='col mb-4'>";
-                            echo "<div class='card'>";
-                            echo "<img src='" . $row['image'] . "' class='card-img-top' alt='" . $row['name'] . "'>";
-                            echo "<div class='card-body'>";
-                            echo "<h5 class='card-title'><a href='product.php?pid=" . $row['id'] . "'>" . $row['name'] . "</a></h5>";
-                            echo "<p class='card-text'>Price: $" . $row['price'] . "</p>";
-                            echo "</div>";
-                            echo "</div>";
-                            echo "</div>";
-                        }
-                        echo "</div>";
-                    } else if (!($search == "")) {
-                        echo "<h3 class='text-center'>Sorry, no results for: " . $search . "</h3>";
-                    }
-                } else {
-                    echo "<p class='text-center'>No search query provided.</p>";
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <?php
+            if(isset($_GET['search'])) {
+                $search = $_GET['search'];
+                $category = isset($_GET['category']) ? $_GET['category'] : ''; // Get selected category
+                $limit = isset($_GET['limit']) ? $_GET['limit'] : 20; 
+                
+                $sql = 'SELECT * FROM products WHERE name LIKE :search';
+                if (!empty($category)) {
+                    // If a category is selected, add category filter to the query
+                    $sql .= ' AND id IN (SELECT productId FROM productcategory WHERE categoryId = :category)';
                 }
-                ?>
-            </div>
+                $sql .= ' LIMIT :limit';
+                
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(':search', '%' . $search . '%');
+                if (!empty($category)) {
+                    $stmt->bindValue(':category', $category);
+                }
+                $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+                $stmt->execute();
+
+                if($stmt->rowCount()>0 && !($search == "")){
+                    echo "<div class='row row-cols-2 row-cols-md-3 row-cols-lg-5' id=results>";
+                    while ($row = $stmt->fetch()) {
+                        echo "<div class='col mb-4'>";
+                        echo "<div class='card'>";
+                        echo "<img src='" . $row['image'] . "' class='card-img-top' alt='" . $row['name'] . "'>";
+                        echo "<div class='card-body'>";
+                        $title = (strlen($row['name']) > 50) ? substr($row['name'], 0, 50) . "..." : $row['name'];
+                        echo "<h5 class='card-title'><a href='product.php?pid=" . $row['id'] . "'>" . $title . "</a></h5>";
+                        echo "<p class='card-text'><strong style='font-size: 1.2em; font-weight: bold;'>$" . number_format($row['price'], 2) . "</strong></p>";
+                        echo "</div>";
+                        echo "</div>";
+                        echo "</div>";
+                    }
+                    echo "</div>";
+                } else if (!($search == "")) {
+                    echo "<h3 class='text-center'>Sorry, no results for: " . $search . "</h3>";
+                }
+            } else {
+                echo "<p class='text-center'>No search query provided.</p>";
+            }
+            ?>
         </div>
     </div>
 
@@ -211,21 +211,41 @@ try {
         }
     });
 
-    function submitForm() {
-        const urlParams = new URLSearchParams(window.location.search);
-        var search = urlParams.get('search');
+    function applyFilters() {
+        //build url
+        var search = document.getElementById('searchInput').value;
         var category = document.getElementById('category').value;
         var limit = document.getElementById('limit').value;
         var selectedSubcategory = document.getElementById('subcategory').value;
-        var url = 'productList.php?search=' + encodeURIComponent(search) + '&category=' + encodeURIComponent(selectedSubcategory) + '&limit=' + encodeURIComponent(limit);
+        const urlParams = new URLSearchParams(window.location.search);
+        const existingSearch = urlParams.get('search');
+        const existingCategory = urlParams.get('category');
+        const existingLimit = urlParams.get('limit');
 
+        if (search === '') {
+            search = existingSearch || '';
+        }
+        if (category === '') {
+            category = existingCategory || '';
+        }
+        if (limit === '') {
+            limit = existingLimit || '20'; 
+        }
+
+        var url = 'productList.php?search=' + encodeURIComponent(search) + '&category=' + encodeURIComponent(selectedSubcategory || category) + '&limit=' + encodeURIComponent(limit);
         window.location.href = url;
     }
 
     document.getElementById('filterForm').addEventListener('submit', function(event) {
         event.preventDefault();
-        submitForm();
+        applyFilters();
     });
+
+    document.getElementById('searchForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        applyFilters();
+    });
+
 </script>
 </body>
 </html>

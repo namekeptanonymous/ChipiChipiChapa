@@ -54,6 +54,9 @@ body {
 
 #results {
     margin-top: 2vh;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
 }
 
 .dropdown-menu {
@@ -71,33 +74,24 @@ body {
 .card {
     padding-top: 1em;
     margin-top: 2em;
-    width: 100%;
-}
-
-.card-body {
-    height: 12em; /* Set the maximum height of the card body */
-    overflow: hidden; /* Hide the overflow text */
+    width: 45%; /* Set a fixed width for uniformity */
+    min-width: 6em; /* Set a minimum width to prevent the card from shrinking too much */
+    height: 5em;
 }
 
 .card-title {
-    font-size: 1em;
-    white-space: wrap; /* Allow the card title to wrap onto multiple lines */
+    font-size: 1.2rem; /* Set a fixed font size */
     overflow: hidden; /* Hide the overflow text */
     text-overflow: ellipsis;
+    white-space: nowrap; /* Prevent text wrapping */
 }
 
 .card-text {
-    white-space: normal; /* Allow the card text to wrap onto multiple lines */
+    font-size: 1rem; /* Set a fixed font size */
     overflow: hidden; /* Hide the overflow text */
 }
 
 .card-img-top{
-    height: 10em;
-}
-
-#results {
-    margin-top: 2vh;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
+    height: 0em; /* Set a fixed height for the card image */
+    object-fit: cover; /* Ensure the image covers the entire space */
 }
