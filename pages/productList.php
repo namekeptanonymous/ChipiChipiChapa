@@ -75,7 +75,7 @@ try {
                 <div>
                     <!-- Search Bar -->
                     <form id="searchForm" method="GET" class="d-flex">
-                        <input type="text" class="form-control me-2" name="search" placeholder="Search">
+                        <input type="text" class="form-control me-2" name="search" placeholder="Search" id="searchInput">
                         <button type="submit" class="btn btn-outline-success">Search</button>
                     </form>
                 </div>
@@ -211,21 +211,41 @@ try {
         }
     });
 
-    function submitForm() {
-        const urlParams = new URLSearchParams(window.location.search);
-        var search = urlParams.get('search');
+    function applyFilters() {
+        //build url
+        var search = document.getElementById('searchInput').value;
         var category = document.getElementById('category').value;
         var limit = document.getElementById('limit').value;
         var selectedSubcategory = document.getElementById('subcategory').value;
-        var url = 'productList.php?search=' + encodeURIComponent(search) + '&category=' + encodeURIComponent(selectedSubcategory) + '&limit=' + encodeURIComponent(limit);
+        const urlParams = new URLSearchParams(window.location.search);
+        const existingSearch = urlParams.get('search');
+        const existingCategory = urlParams.get('category');
+        const existingLimit = urlParams.get('limit');
 
+        if (search === '') {
+            search = existingSearch || '';
+        }
+        if (category === '') {
+            category = existingCategory || '';
+        }
+        if (limit === '') {
+            limit = existingLimit || '20'; 
+        }
+
+        var url = 'productList.php?search=' + encodeURIComponent(search) + '&category=' + encodeURIComponent(selectedSubcategory || category) + '&limit=' + encodeURIComponent(limit);
         window.location.href = url;
     }
 
     document.getElementById('filterForm').addEventListener('submit', function(event) {
         event.preventDefault();
-        submitForm();
+        applyFilters();
     });
+
+    document.getElementById('searchForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        applyFilters();
+    });
+
 </script>
 </body>
 </html>
