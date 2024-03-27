@@ -163,7 +163,7 @@ try {
                         echo "<div class='card-body'>";
                         $title = (strlen($row['name']) > 50) ? substr($row['name'], 0, 50) . "..." : $row['name'];
                         echo "<h5 class='card-title'><a href='product.php?pid=" . $row['id'] . "'>" . $title . "</a></h5>";
-                        echo "<p class='card-text'><strong style='font-size: 1.2em; font-weight: bold;'>$" . number_format($row['price'], 2) . "</strong></p>";
+                        echo "<p class='card-text'>$" . number_format($row['price'], 2) . "</p>";
                         echo "</div>";
                         echo "</div>";
                         echo "</div>";

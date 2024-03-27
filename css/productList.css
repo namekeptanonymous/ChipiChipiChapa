@@ -69,24 +69,28 @@ body {
 }
 
 .card {
-    padding-top: 1em;
     margin-top: 2em;
     width: 100%;
 }
 
 .card-body {
-    height: 12em; /* Set the maximum height of the card body */
+    height: 6em; /* Set the maximum height of the card body */
     overflow: hidden; /* Hide the overflow text */
 }
 
 .card-title {
     font-size: 1em;
-    white-space: wrap; /* Allow the card title to wrap onto multiple lines */
-    overflow: hidden; /* Hide the overflow text */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
     text-overflow: ellipsis;
+    white-space: normal; 
 }
 
 .card-text {
+    font-size: 1.2em; 
+    font-weight: bold;
     white-space: normal; /* Allow the card text to wrap onto multiple lines */
     overflow: hidden; /* Hide the overflow text */
 }
