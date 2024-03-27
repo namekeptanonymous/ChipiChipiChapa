@@ -4,7 +4,7 @@
 session_start();
 
 try {
-    $pdo = new PDO("mysql:host=localhost;dbname=newdb", "root", "");
+    $pdo = new PDO("mysql:host=localhost;dbname=bestbuy", "root", "");
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     die("Connection failed: " . $e->getMessage());

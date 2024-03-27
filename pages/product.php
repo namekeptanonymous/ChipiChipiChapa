@@ -112,8 +112,23 @@ try {
                         }
                     ?>
             </div>
-            
-            
+            <div class="row justify-content-center"> 
+                <?php
+                        # CHECK FOR USERID
+                        if (isset($_SESSION['userId'])) {
+                            #echo $_SESSION['userId'];
+                            #echo " ";
+                            #echo $_GET['pid'];
+                            echo "<form method='POST' id='commentSubmit' action='../php/add_comment.php' enctype='multipart/form-data'>";
+                                echo"<label for='commentText'>Comment:</label><br>";
+                                echo"<input type='text' id='commentText' name='commentText'><br><br>";
+                                echo"<input type='hidden' name='userId' value='". $_SESSION['userId']."' />";
+                                echo"<input type='hidden' name='pid' value='".$_GET['pid']."' />";
+                                echo"<input type='submit' value='Submit' class='btn btn-success' id='submit-btn'>";
+                            echo "</form>";
+                        }
+                ?>
+            </div>
         </div>
     </div>
 
@@ -124,6 +139,17 @@ try {
             </div>
         </div>
     </footer>
+    <script>
+        document.getElementById('commentSubmit').addEventListener('submit', function(event){
+            console.log("submit");
+            var comment = document.getElementById('commentText').value;
+            if(!comment){
+                alert("Empty comment field");
+                event.preventDefault;
+                return;
+            }
+        });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>
