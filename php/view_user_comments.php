@@ -124,7 +124,7 @@ if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
                         while ($comment = $sql->fetch()) {
                             echo "<tr>";
                             // Comment text with larger font size
-                            echo "<td style='font-size: 1.5rem;'>" . $comment['commentText'] . "</td>";
+                            echo "<td style='font-size: 1.5rem;' onclick='editComment(this, " . $comment['commentId'] . ")'>" . $comment['commentText'] . "</td>";
                             // Timestamp
                             echo "<td style='font-size: 1rem;'>" . $comment['timestamp'] . "</td>";
                             // Product ID with link
@@ -166,6 +166,29 @@ if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
     </script>
+
+    <script>
+        function editComment(element, commentid) {
+        var newText = prompt("Enter new comment text:", element.innerText.trim());
+        if (newText !== null) {
+            $.ajax({
+                url: '/update_comment.php',
+                method: 'POST',
+                data: { commentId: commentid, newText: newText },
+                success: function(response) {
+                    if (response === 'success') {
+                        element.innerText = newText;
+                        alert('Comment $commentId updated!');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                    alert('An error occurred while updating the comment.' + error);
+                }
+            });
+        }
+    }
+</script>
 
 </body>
 </html>
