@@ -75,7 +75,7 @@ try {
                             $stmt -> bindValue(':pid', "%" . $pid . '%');
                             $stmt->execute();
 
-                            if($stmt->rowCount() == 1){
+                            if($stmt->rowCount() > 0){
                                 $row = $stmt->fetch();
                                 echo "<div class='row'>";
                                     echo "<div class='col-sm-4'>";
