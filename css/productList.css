@@ -95,8 +95,10 @@ body {
     overflow: hidden; /* Hide the overflow text */
 }
 
-.card-img-top{
-    height: 10em;
+.card-img-top {
+    height: 15em; /* Set a fixed height for the card image */
+    max-width: 100%; /* Ensure the image covers the entire space */
+    object-fit: contain; /* Maintain aspect ratio and cover the entire space */
 }
 
 #results {
