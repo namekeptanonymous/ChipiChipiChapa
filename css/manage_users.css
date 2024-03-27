@@ -76,3 +76,11 @@ body {
 .card {
     padding: 0.5em;
 }
+
+#user-cards a {
+    text-decoration: none;
+}
+
+.disabled-card {
+    opacity: 60%;
+}

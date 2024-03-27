@@ -1,3 +1,7 @@
+h3 {
+    margin-top: 2em;
+}
+
 body {
     justify-content: center;
     align-items: center;
@@ -67,10 +71,33 @@ body {
 .card {
     padding-top: 1em;
     margin-top: 2em;
-    height: 100%;
-    width: 15vw;
+    width: 100%;
 }
 
-h3 {
-    margin-top: 2em;
+.card-body {
+    height: 12em; /* Set the maximum height of the card body */
+    overflow: hidden; /* Hide the overflow text */
+}
+
+.card-title {
+    font-size: 1em;
+    white-space: wrap; /* Allow the card title to wrap onto multiple lines */
+    overflow: hidden; /* Hide the overflow text */
+    text-overflow: ellipsis;
+}
+
+.card-text {
+    white-space: normal; /* Allow the card text to wrap onto multiple lines */
+    overflow: hidden; /* Hide the overflow text */
+}
+
+.card-img-top{
+    height: 10em;
+}
+
+#results {
+    margin-top: 2vh;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
 }

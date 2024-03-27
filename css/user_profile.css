@@ -91,7 +91,7 @@ body {
 
     .user-profile .rounded-circle {
         transition: border-radius 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
-        border-color: rgb(212, 186, 186) !important;
+        border-color: rgb(188, 136, 136) !important;
     }
 
     .user-profile .rounded-circle:hover {
