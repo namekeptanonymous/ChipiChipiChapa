@@ -9,6 +9,13 @@ try {
 } catch (PDOException $e) {
     die("Connection failed: " . $e->getMessage());
 }
+
+try {
+    $conn = new PDO("mysql:host=localhost;dbname=chipichipichapa", "root", "");
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
 ?>
 
 <html lang="en">
@@ -113,21 +120,53 @@ try {
                     ?>
             </div>
             <div class="row justify-content-center"> 
-                <?php
-                        # CHECK FOR USERID
-                        if (isset($_SESSION['userId'])) {
-                            #echo $_SESSION['userId'];
-                            #echo " ";
-                            #echo $_GET['pid'];
-                            echo "<form method='POST' id='commentSubmit' action='../php/add_comment.php' enctype='multipart/form-data'>";
-                                echo"<label for='commentText'>Comment:</label><br>";
-                                echo"<input type='text' id='commentText' name='commentText'><br><br>";
-                                echo"<input type='hidden' name='userId' value='". $_SESSION['userId']."' />";
-                                echo"<input type='hidden' name='pid' value='".$_GET['pid']."' />";
-                                echo"<input type='submit' value='Submit' class='btn btn-success' id='submit-btn'>";
-                            echo "</form>";
-                        }
-                ?>
+                <div class="col-sm-4">
+                    <?php
+                            # CHECK FOR USERID
+                            if (isset($_SESSION['userId'])) {
+                                #echo $_SESSION['userId'];
+                                #echo " ";
+                                #echo $_GET['pid'];
+                                echo "<form method='POST' id='commentSubmit' action='../php/add_comment.php' enctype='multipart/form-data'>";
+                                    echo"<label for='commentText'>Comment:</label><br>";
+                                    echo"<input type='text' id='commentText' name='commentText'><br><br>";
+                                    echo"<input type='hidden' name='userId' value='". $_SESSION['userId']."' />";
+                                    echo"<input type='hidden' name='pid' value='".$_GET['pid']."' />";
+                                    echo"<input type='submit' value='Submit' class='btn btn-success' id='submit-btn'>";
+                                echo "</form>";
+                            }
+                    ?>
+                </div>
+                <div class="col-sm-8">
+                    <table class="table">
+                        <thead>
+                        <th scope="col">Username</th>
+                        <th scope="col">Comment</th>
+                        <th scope="col">Date Posted</th>
+                        </thead>
+                        <tbody>
+                            <?php
+                                # Get all comments
+                                $pid = $_GET['pid'];
+                                $sql = 'SELECT * FROM comments WHERE pid LIKE :pid';
+                                $stmt = $conn->prepare($sql);
+                                $stmt -> bindValue(':pid', "%" . $pid . '%');
+                                $stmt->execute();
+                                while( $row = $stmt->fetch() ){
+                                    $sql2 = 'SELECT userName FROM users WHERE userid LIKE :userid';
+                                    $stmt2 = $conn->prepare($sql2);
+                                    $stmt2 -> bindValue(':userid', '%'. $row['userid'] . '%');
+                                    $stmt2->execute();
+                                    $row2 = $stmt2->fetch();
+                                    echo"<tr>";
+                                        echo"<td> ".$row2['userName']."</td> ";
+                                        echo"<td> ".$row['commentText']."</td> ";
+                                        echo"<td> ".$row['timestamp']."</td> ";
+                                    echo"</tr>";
+                                }
+                            ?>
+                        </tbody>
+                </div>
             </div>
         </div>
     </div>
