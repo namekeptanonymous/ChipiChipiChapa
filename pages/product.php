@@ -28,6 +28,7 @@ try {
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
     <link rel="stylesheet" href="../css/productList.css">
     <link rel="icon" type="image/x-icon" href="../images/icon.png">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
     <nav class="navbar sticky-top navbar-expand-md navbar-light bg-light">
@@ -144,28 +145,9 @@ try {
                         <th scope="col">Comment</th>
                         <th scope="col">Date Posted</th>
                         </thead>
-                        <tbody>
-                            <?php
-                                # Get all comments
-                                $pid = $_GET['pid'];
-                                $sql = 'SELECT * FROM comments WHERE pid LIKE :pid';
-                                $stmt = $conn->prepare($sql);
-                                $stmt -> bindValue(':pid', "%" . $pid . '%');
-                                $stmt->execute();
-                                while( $row = $stmt->fetch() ){
-                                    $sql2 = 'SELECT userName FROM users WHERE userid LIKE :userid';
-                                    $stmt2 = $conn->prepare($sql2);
-                                    $stmt2 -> bindValue(':userid', '%'. $row['userid'] . '%');
-                                    $stmt2->execute();
-                                    $row2 = $stmt2->fetch();
-                                    echo"<tr>";
-                                        echo"<td> ".$row2['userName']."</td> ";
-                                        echo"<td> ".$row['commentText']."</td> ";
-                                        echo"<td> ".$row['timestamp']."</td> ";
-                                    echo"</tr>";
-                                }
-                            ?>
+                        <tbody id="discussion">
                         </tbody>
+                        
                 </div>
             </div>
         </div>
@@ -187,6 +169,31 @@ try {
                 event.preventDefault;
                 return;
             }
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            // Function to reload discussion thread
+            var interval = 1000;
+            function reloadDiscussion() {
+                console.log("here");
+                $.ajax({
+                    url: '../php/display_comment.php?pid=<?php
+                        $pid = $_GET['pid'];
+                        echo"$pid";?>',
+                    type: 'GET',
+                    success: function(response) {
+                        $('#discussion').html(response); // Update discussion content
+                        setTimeout(reloadDiscussion, interval);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', status, error);
+                    }
+                });
+            }setTimeout(reloadDiscussion, interval);
+
+            // Initial load of discussion thread
+            reloadDiscussion();
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
