@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-
 <?php
 session_start();
 if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
@@ -71,7 +69,7 @@ if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
         <div class="container-fluid">
             <div class="row justify-content-center">
                 <div class="col-md-8">
-                    <form class="form-inline mb-3" action="" method="GET">
+                    <form class="form-inline mb-3" action="../pages/manage_users.php" method="GET">
                         <div class="input-group">
                             <select class="form-select" name="search_type" style="width:5em">
                                 <option value="" selected disabled>Filter</option>
@@ -98,61 +96,57 @@ if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
                         die("Connection failed: " . $e->getMessage());
                     }
 
-                    if (isset($_GET['search'])) {
-                        if (isset($_GET['search_type'])) {
-                            if ($_GET['search_type']==="email") {
-                                $sql = 'SELECT * FROM users WHERE email LIKE "%' . $_GET['search'] . '%"';
-                            } else {
-                                $sql = 'SELECT * FROM users WHERE userName LIKE "%' . $_GET['search'] . '%"';
-                            }
-                        } else {
-                            $sql = 'SELECT * FROM users WHERE userName LIKE "%' . $_GET['search'] . '%"';
+                    $userId = $_GET['userId'];
+
+                    try {
+                        $pdo = new PDO("mysql:host=localhost;dbname=chipichipichapa", "root", "");
+                        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+                        // Fetch user's comments from the database
+                        $sql = $pdo->prepare("SELECT * FROM comments WHERE userId = ?");
+                        $sql->execute([$userId]);
+                    } catch(PDOException $e) {
+                        echo "Connection failed: " . $e->getMessage();
+                    }
+
+                    if ($sql->rowCount() > 0) {
+                        echo "<table class='table'>";
+                        echo "<thead>";
+                        echo "<tr>";
+                        echo "<th>Comment</th>";
+                        echo "<th>Timestamp</th>";
+                        echo "<th>Product ID</th>";
+                        echo "<th></th>";
+                        echo "</tr>";
+                        echo "</thead>";
+                        echo "<tbody>";
+                        // Iterate over each comment
+                        while ($comment = $sql->fetch()) {
+                            echo "<tr>";
+                            // Comment text with larger font size
+                            echo "<td style='font-size: 1.5rem;'>" . $comment['commentText'] . "</td>";
+                            // Timestamp
+                            echo "<td style='font-size: 1rem;'>" . $comment['timestamp'] . "</td>";
+                            // Product ID with link
+                            echo "<td style='font-size: 1rem;'><a href='../pages/product.php?pid=" . $comment['pid'] . "'>" . $comment['pid'] . "</a></td>";
+                            // Delete button
+                            echo "<td>";
+                            echo "<form action='delete_comment.php?id=" . $comment['commentId'] ."' method='POST'>";
+                            echo "<td class='delete'><a href='../php/delete_comment.php?id=" . $comment['commentId'] . "' style='text-decoration: none'>
+                                <button class='btn btn-outline-danger my-2 my-sm-0 d-flex align-items-center justify-content-center' style='padding: 6px'>
+                                <span class='material-symbols-outlined'>delete</span></button></a></td>";
+                            echo "</form>";
+                            echo "</td>";
+                            echo "</tr>";
                         }
+                        echo "</tbody>";
+                        echo "</table>";
                     } else {
-                        echo 'Please search to be able to see users!';
-                        $stopSearch = true;
+                        echo "<h3 class='text-center'>No comments found.</h3>";
                     }
-
-                    if (!isset($stopSearch)) {
-                        $stmt = $pdo->query($sql);
-                        if($stmt->rowCount() > 0) {
-                            echo "<div class='row' id='user-cards'>";
-                            // Iterate over each user
-                            while ($row = $stmt->fetch()) {
-                                echo "<div class='col mb-4'>";
-                                echo "<div class='card" . (($row['enabled']) ? '' : ' disabled-card') . "'>";
-                                echo "<div class='card-body'>";
-                                
-                                $_SESSION['manageUserPicture'] = $row['profilePicture'];
-                                echo "<div class='d-flex align-items-center justify-content-center'>";
-                                echo "<img src='../php/png_image.php?id=" . $row['userid'] . "' class='rounded-circle border' alt='User Picture' height='50' style='margin-right: 0.5em'>";
-                                echo "<h5 class='card-title'>" . $row['userName'] . (($row['enabled']) ? '' : ' [disabled]') . "</h5>";
-                                // More user information here if needed
-                                echo "<a href='../php/disable_profile.php?id=" . $row['userid'] . "'><button class='btn btn-outline-danger my-2 my-sm-0 d-flex align-items-center justify-content-center' style='padding: 6px; margin: 0em 0.5em 0em 0.5em''>
-                                    <span class='material-symbols-outlined'>power_settings_new</span>
-                                </button></a>";
-                                echo "<a href='../php/edit_profile.php?id=" . $row['userid'] . "'><button class='btn btn-outline-primary my-2 my-sm-0 d-flex align-items-center justify-content-center' style='padding: 6px; margin-right: 0.5em'>
-                                    <span class='material-symbols-outlined'>edit</span>
-                                </button></a>";
-                                echo "<a href='../php/delete_profile.php?id=" . $row['userid'] . "'><button class='btn btn-outline-danger my-2 my-sm-0 d-flex align-items-center justify-content-center' style='padding: 6px; margin-right: 0.5em'>
-                                    <span class='material-symbols-outlined'>delete</span>
-                                </button></a>";
-                                // Add a link to view user's comments
-                                echo "<a href='../php/view_user_comments.php?userId=" . $row['userid'] . "' class='btn btn-outline-primary my-2 my-sm-0 d-flex align-items-center justify-content-center' style='padding: 6px;'>
-                                    Comments
-                                </a>";
-
-                                echo "</div>";
-
-                                echo "</div>";
-                                echo "</div>";
-                                echo "</div>";
-                            }
-                            echo "</div>";
-                        } else {
-                            echo "<h3 class='text-center'>No users found.</h3>";
-                        }
-                    }
+                    
+                    
+                    
                     ?>
                 </div>
             </div>
