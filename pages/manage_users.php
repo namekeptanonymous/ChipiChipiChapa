@@ -131,8 +131,7 @@ if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
                                 $_SESSION['manageUserPicture'] = $row['profilePicture'];
                                 echo "<div class='d-flex align-items-center justify-content-center'>";
                                 echo "<img src='../php/png_image.php?id=" . $row['userid'] . "' class='rounded-circle border' alt='User Picture' height='50' style='margin-right: 0.5em'>";
-                                echo "<h5 class='card-title'>" . $row['userName'] . (($row['enabled']) ? '' : ' [disabled]') . "</h5>";
-                                // More user information here if needed
+                                echo "<h5 class='card-title'>" . $row['userName'] . (($row['enabled']) ? '' : ' [disabled]') . " — " . $row['email'] . "</h5>";
                                 echo "<a href='../php/disable_profile.php?id=" . $row['userid'] . "'><button class='btn btn-outline-danger my-2 my-sm-0 d-flex align-items-center justify-content-center' style='padding: 6px; margin: 0em 0.5em 0em 0.5em''>
                                     <span class='material-symbols-outlined'>power_settings_new</span>
                                 </button></a>";
