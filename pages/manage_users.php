@@ -97,8 +97,10 @@ if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
                     } catch (PDOException $e) {
                         die("Connection failed: " . $e->getMessage());
                     }
-
-                    if (isset($_GET['search'])) {
+                    if (isset($_GET['userId'])) {
+                        $sql = 'SELECT * FROM users WHERE userId = "' . $_GET['userId'] . '"';
+                    }
+                    else if (isset($_GET['search'])) {
                         if (isset($_GET['search_type'])) {
                             if ($_GET['search_type']==="email") {
                                 $sql = 'SELECT * FROM users WHERE email LIKE "%' . $_GET['search'] . '%"';
@@ -138,7 +140,7 @@ if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
                                     <span class='material-symbols-outlined'>delete</span>
                                 </button></a>";
                                 // Add a link to view user's comments
-                                echo "<a href='../php/view_user_comments.php?userId=" . $row['userid'] . "' class='btn btn-outline-primary my-2 my-sm-0 d-flex align-items-center justify-content-center' style='padding: 6px;'>
+                                echo "<a href='../pages/view_user_comments.php?userId=" . $row['userid'] . "' class='btn btn-outline-primary my-2 my-sm-0 d-flex align-items-center justify-content-center' style='padding: 6px;'>
                                     Comments
                                 </a>";
 

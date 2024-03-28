@@ -132,7 +132,7 @@ try {
                                 #echo $_GET['pid'];
                                 echo "<form method='POST' id='commentSubmit' action='../php/add_comment.php' enctype='multipart/form-data'>";
                                     echo"<label for='commentText'>Comment:</label><br>";
-                                    echo"<input type='text' id='commentText' name='commentText'><br><br>";
+                                    echo"<input type='text' name='commentText'><br><br>";
                                     echo"<input type='hidden' name='userId' value='". $_SESSION['userId']."' />";
                                     echo"<input type='hidden' name='pid' value='".$_GET['pid']."' />";
                                     echo"<input type='submit' value='Submit' class='btn btn-success' id='submit-btn'>";

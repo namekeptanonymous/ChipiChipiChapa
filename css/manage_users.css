@@ -84,3 +84,8 @@ body {
 .disabled-card {
     opacity: 60%;
 }
+
+.delete {
+    border: none;
+    width: 0em;
+}

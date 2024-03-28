@@ -16,32 +16,38 @@ try {
 }
 
 # Get all comments
-$pid = $_GET['pid'];
-$sql = 'SELECT * FROM comments WHERE pid LIKE :pid';
+$pid = $_GET['userId'];
+$sql = 'SELECT * FROM comments WHERE userId LIKE :userId';
 $stmt = $conn->prepare($sql);
-$stmt->bindValue(':pid', "%" . $pid . '%');
+$stmt->bindValue(':userId', "%" . $pid . '%');
 $stmt->execute();
 while ($row = $stmt->fetch()) {
+    // Get the user name associated with the user ID
     $sql2 = 'SELECT userName FROM users WHERE userid LIKE :userid';
     $stmt2 = $conn->prepare($sql2);
     $stmt2->bindValue(':userid', '%' . $row['userid'] . '%');
     $stmt2->execute();
     $row2 = $stmt2->fetch();
+
     echo "<tr>";
-    echo "<td><a href='../pages/manage_users.php?userId=" . $row['userid'] . "'</a>" . $row2['userName'] . "</td> ";
+    // Comment text
     if (isset($_SESSION['admin']) && $_SESSION['admin']) {
-        echo "<td class='commentText' onclick='editComment(this, " . $row['commentId'] . ")'> " . $row['commentText'] . "</td> ";
+        echo "<td class='commentText' onclick='editComment(this, " . $row['commentId'] . ")'>" . $row['commentText'] . "</td>";
     } else {
-        echo "<td> " . $row['commentText'] . "</td> ";
+        echo "<td>" . $row['commentText'] . "</td>";
     }
-    echo "<td> " . $row['timestamp'] . "</td> ";
+    // Timestamp
+    echo "<td>" . $row['timestamp'] . "</td>";
+    // Product ID with link
+    echo "<td><a href='../pages/product.php?pid=" . $row['pid'] . "'>" . $row['pid'] . "</a></td>";
+
+    // Delete button (only for admins)
     if (isset($_SESSION['admin']) && $_SESSION['admin']) {
         echo "<td class='delete'><a href='../php/delete_comment.php?id=" . $row['commentId'] . "' style='text-decoration: none'>
-        <button class='btn btn-outline-danger my-2 my-sm-0 d-flex align-items-center justify-content-center' style='padding: 6px'>
-        <span class='material-symbols-outlined'>delete</span></button></a></td>";
+            <button class='btn btn-outline-danger my-2 my-sm-0 d-flex align-items-center justify-content-center' style='padding: 6px'>
+            <span class='material-symbols-outlined'>delete</span></button></a></td>";
     }
     echo "</tr>";
-    
 }
 ?>
 
