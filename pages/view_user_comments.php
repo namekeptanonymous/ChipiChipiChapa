@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+
 <?php
 session_start();
 if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
@@ -15,7 +17,6 @@ if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
     <link rel="stylesheet" href="../css/manage_users.css" />
     <link rel="icon" type="image/x-icon" href="../images/icon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <title>ChipiChipiChapa</title>
 </head>
 <body>
@@ -55,7 +56,7 @@ if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
                     ?><?php echo isset($_SESSION['userName']) ? $_SESSION['userName'] : 'User'; ?>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                        <li><a class="dropdown-item" href="../pages/user_profile.php">User Profile</a></li>
+                        <li><a class="dropdown-item" href="./user_profile.php">User Profile</a></li>
                         <li><a class="dropdown-item" href="../php/logout.php?return=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                     </ul>
                 </div>
