@@ -94,6 +94,7 @@ if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
                         <th scope="col">Comment</th>
                         <th scope="col">Time Stamp</th>
                         <th scope="col">Product Page</th>
+                        <th scope="col"></th>
                         </thead>
                         <tbody id="discussion">
                         </tbody>

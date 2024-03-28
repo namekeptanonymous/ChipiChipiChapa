@@ -28,10 +28,11 @@ while ($row = $stmt->fetch()) {
     $stmt2->execute();
     $row2 = $stmt2->fetch();
     echo "<tr>";
-    echo "<td><a href='../pages/manage_users.php?userId=" . $row['userid'] . "'</a>" . $row2['userName'] . "</td> ";
     if (isset($_SESSION['admin']) && $_SESSION['admin']) {
+        echo "<td><a href='../pages/manage_users.php?userId=" . $row['userid'] . "'</a>" . $row2['userName'] . "</td> ";
         echo "<td class='commentText' onclick='editComment(this, " . $row['commentId'] . ")'> " . $row['commentText'] . "</td> ";
     } else {
+        echo "<td>". $row2['userName'] . "</td> ";
         echo "<td> " . $row['commentText'] . "</td> ";
     }
     echo "<td> " . $row['timestamp'] . "</td> ";
