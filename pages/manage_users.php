@@ -77,6 +77,7 @@ if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
                                 <option value="" selected disabled>Filter</option>
                                 <option value="username" <?php echo (isset($_GET['search_type']) && $_GET['search_type']==='username') ? 'selected' : '';?>>Username</option>
                                 <option value="email" <?php echo (isset($_GET['search_type']) && $_GET['search_type']==='email') ? 'selected' : '';?>>Email</option>
+                                <option value="comment" <?php echo (isset($_GET['search_type']) && $_GET['search_type']==='comment') ? 'selected' : '';?>>Comment</option>
                             </select>
                             <input type="text" class="form-control" name="search"
                                 placeholder="Search by name" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>"
@@ -104,6 +105,8 @@ if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
                         if (isset($_GET['search_type'])) {
                             if ($_GET['search_type']==="email") {
                                 $sql = 'SELECT * FROM users WHERE email LIKE "%' . $_GET['search'] . '%"';
+                            } else if ($_GET['search_type']==="comment") {
+                                $sql = 'SELECT DISTINCT * FROM users JOIN comments ON users.userid=comments.userid WHERE commentText LIKE "%' . $_GET['search'] . '%"';
                             } else {
                                 $sql = 'SELECT * FROM users WHERE userName LIKE "%' . $_GET['search'] . '%"';
                             }
