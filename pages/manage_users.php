@@ -106,7 +106,7 @@ if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
                             if ($_GET['search_type']==="email") {
                                 $sql = 'SELECT * FROM users WHERE email LIKE "%' . $_GET['search'] . '%"';
                             } else if ($_GET['search_type']==="comment") {
-                                $sql = 'SELECT DISTINCT * FROM users JOIN comments ON users.userid=comments.userid WHERE commentText LIKE "%' . $_GET['search'] . '%"';
+                                $sql = 'SELECT DISTINCT users.userid, users.userName, users.profilePicture, users.email, users.enabled FROM users JOIN comments ON users.userid = comments.userid WHERE commentText LIKE "%' . $_GET['search'] . '%"';
                             } else {
                                 $sql = 'SELECT * FROM users WHERE userName LIKE "%' . $_GET['search'] . '%"';
                             }
