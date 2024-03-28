@@ -21,7 +21,6 @@ session_start();
             <a class="navbar-brand" href="#"><img src="images/longbanner.png" height="38" class="d-inline-block align-top brand-image" alt=""></a>
             <div class="navbar-nav text-center d-flex align-items-center justify-content-center">
                 <?php
-                    // Check if profile picture data is available in session
                     if (isset($_SESSION['profilePicture'])) {
                         echo '';
                     } else {
@@ -31,12 +30,9 @@ session_start();
                 <div class="dropdown <?php echo isset($_SESSION['userName']) ? '' : 'd-none'; ?>" id="dropdown">
                     <a class="nav-link dropdown-toggle d-flex align-items-center justify-content-center" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <?php
-                        // Check if profile picture data is available in session
                         if (isset($_SESSION['profilePicture'])) {
-                            // Use the display_image.php script as the src attribute
                             echo '<img src="php/display_image.php" height="24" alt="Profile Picture" class="material-symbols-outlined rounded-circle border">';
                         } else {
-                            // If profile picture data is not available, display a placeholder image or text
                             echo '<span class="material-symbols-outlined">account_circle</span>';
                         }
                     ?><?php echo isset($_SESSION['userName']) ? $_SESSION['userName'] : 'User'; ?>
@@ -50,7 +46,6 @@ session_start();
             </div>
         </div>
     </nav>
-
     <div id="main">
         <div class="container-fluid" id="splash">
             <p id="splash-text">
@@ -60,10 +55,8 @@ session_start();
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-6">
-
                             Welcome to ChipiChipiChapa, the best place to find the best prices on Amazon products!<br><br>
                             Use the search bar to search for products by name or with an Amazon link!
-
                     </div>
                     <div class="col-md-6 d-flex align-items-center justify-content-center">
                         <form class="form-inline" action="pages/productList.php" method="get">
@@ -80,7 +73,6 @@ session_start();
             </div>
         </div>
     </div>
-
     <footer class="footer text-center py-3">
         <div class="container-fluid text-center" data-bs-theme="dark">
             <div class="row mt-3">
@@ -88,14 +80,10 @@ session_start();
             </div>
         </div>
     </footer>
-
     <script>
-        
     </script>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
     </script>
-
 </body>
 </html>
