@@ -17,6 +17,7 @@ if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
     <link rel="stylesheet" href="../css/manage_users.css" />
     <link rel="icon" type="image/x-icon" href="../images/icon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <title>ChipiChipiChapa</title>
 </head>
 <body>
