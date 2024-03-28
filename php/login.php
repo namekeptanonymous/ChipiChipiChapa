@@ -32,7 +32,7 @@ try {
                 $_SESSION['userName'] = $user['userName'];
                 $_SESSION['email'] = $user['email'];
                 $_SESSION['profilePicture'] = $user['profilePicture'];
-                $_SESSION['admin'] = ($user['admin']===0) ? false : true;
+                $_SESSION['admin'] = $user['admin'];
 
                 if ($_SESSION['admin']) {
                     echo "<script>alert('Admin $userName with email $email has logged in successfully.'); window.location.href = '../index.php';</script>";
