@@ -3,9 +3,9 @@ session_start();
 
 // Database connection parameters
 $servername = "localhost";
-$username = "root";
-$password = "";
-$database = "chipichipichapa";
+$username = "24725301";
+$password = "24725301";
+$database = "db_24725301";
 
 try {
     $conn = new PDO("mysql:host=$servername;dbname=$database", $username, $password);

@@ -2,15 +2,8 @@
 session_start();
 
 try {
-    $pdo = new PDO("mysql:host=localhost;dbname=bestbuy", "root", "");
+    $pdo = new PDO("mysql:host=localhost;dbname=db_24725301", "24725301", "24725301");
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Connection failed: " . $e->getMessage());
-}
-
-try {
-    $conn = new PDO("mysql:host=localhost;dbname=chipichipichapa", "root", "");
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     die("Connection failed: " . $e->getMessage());
 }
@@ -18,13 +11,13 @@ try {
 # Get all comments
 $pid = $_GET['userId'];
 $sql = 'SELECT * FROM comments WHERE userId LIKE :userId';
-$stmt = $conn->prepare($sql);
+$stmt = $pdo->prepare($sql);
 $stmt->bindValue(':userId', "%" . $pid . '%');
 $stmt->execute();
 while ($row = $stmt->fetch()) {
     // Get the user name associated with the user ID
     $sql2 = 'SELECT userName FROM users WHERE userid LIKE :userid';
-    $stmt2 = $conn->prepare($sql2);
+    $stmt2 = $pdo->prepare($sql2);
     $stmt2->bindValue(':userid', '%' . $row['userid'] . '%');
     $stmt2->execute();
     $row2 = $stmt2->fetch();

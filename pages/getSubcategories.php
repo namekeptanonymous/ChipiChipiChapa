@@ -4,7 +4,7 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
         $categoryId = $_POST['categoryId'];
         
         try {
-            $pdo = new PDO("mysql:host=localhost;dbname=bestbuy", "root", "");
+            $pdo = new PDO("mysql:host=localhost;dbname=db_24725301", "24725301", "24725301");
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         
             $stmt = $pdo->prepare("
