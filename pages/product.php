@@ -118,19 +118,15 @@ try {
             <div class="row justify-content-center"> 
                 <div class="col-sm-4">
                     <?php
-                            # CHECK FOR USERID
-                            if (isset($_SESSION['userId'])) {
-                                #echo $_SESSION['userId'];
-                                #echo " ";
-                                #echo $_GET['pid'];
-                                echo "<form method='POST' id='commentSubmit' action='../php/add_comment.php' enctype='multipart/form-data'>";
-                                    echo"<label for='commentText'>Comment:</label><br>";
-                                    echo"<input type='text' name='commentText'><br><br>";
-                                    echo"<input type='hidden' name='userId' value='". $_SESSION['userId']."' />";
-                                    echo"<input type='hidden' name='pid' value='".$_GET['pid']."' />";
-                                    echo"<input type='submit' value='Submit' class='btn btn-success' id='submit-btn'>";
-                                echo "</form>";
-                            }
+                        if (isset($_SESSION['userId'])) {
+                            echo "<form method='POST' id='commentSubmit' action='../php/add_comment.php' enctype='multipart/form-data'>";
+                            echo"<label for='commentText'>Comment:</label><br>";
+                            echo"<input type='text' name='commentText'><br><br>";
+                            echo"<input type='hidden' name='userId' value='". $_SESSION['userId']."' />";
+                            echo"<input type='hidden' name='pid' value='".$_GET['pid']."' />";
+                            echo"<input type='submit' value='Submit' class='btn btn-success' id='submit-btn'>";
+                            echo "</form>";
+                        }
                     ?>
                 </div>
                 <div class="col-sm-8">
@@ -140,14 +136,11 @@ try {
                         <th scope="col">Comment</th>
                         <th scope="col">Date Posted</th>
                         </thead>
-                        <tbody id="discussion">
-                        </tbody>
-                        
+                        <tbody id="discussion"></tbody>
                 </div>
             </div>
         </div>
     </div>
-
     <footer class="footer text-center py-3">
         <div class="container-fluid text-center" data-bs-theme="dark">
             <div class="row mt-3">
@@ -157,7 +150,6 @@ try {
     </footer>
     <script>
         document.getElementById('commentSubmit').addEventListener('submit', function(event){
-            console.log("submit");
             var comment = document.getElementById('commentText').value;
             if(!comment){
                 alert("Empty comment field");
@@ -168,17 +160,15 @@ try {
     </script>
     <script>
         $(document).ready(function() {
-            // Function to reload discussion thread
             var interval = 1000;
             function reloadDiscussion() {
-                console.log("here");
                 $.ajax({
                     url: '../php/display_comment.php?pid=<?php
                         $pid = $_GET['pid'];
                         echo"$pid";?>',
                     type: 'GET',
                     success: function(response) {
-                        $('#discussion').html(response); // Update discussion content
+                        $('#discussion').html(response);
                         setTimeout(reloadDiscussion, interval);
                     },
                     error: function(xhr, status, error) {
@@ -186,12 +176,9 @@ try {
                     }
                 });
             }setTimeout(reloadDiscussion, interval);
-
-            // Initial load of discussion thread
             reloadDiscussion();
         });
     </script>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>

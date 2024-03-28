@@ -63,108 +63,100 @@ if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
             </div>
         </div>
     </nav>
-
     <div id="main">
-    <div class="container-fluid" id="splash">
-        <h1 id="splash-text">Manage Users</h1>
-        <br><br>
-        <div class="container-fluid">
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <form class="form-inline mb-3" action="" method="GET">
-                        <div class="input-group">
-                            <select class="form-select" name="search_type" style="width:5em">
-                                <option value="" selected disabled>Filter</option>
-                                <option value="username" <?php echo (isset($_GET['search_type']) && $_GET['search_type']==='username') ? 'selected' : '';?>>Username</option>
-                                <option value="email" <?php echo (isset($_GET['search_type']) && $_GET['search_type']==='email') ? 'selected' : '';?>>Email</option>
-                                <option value="comment" <?php echo (isset($_GET['search_type']) && $_GET['search_type']==='comment') ? 'selected' : '';?>>Comment</option>
-                            </select>
-                            <input type="text" class="form-control" name="search"
-                                placeholder="Search by name" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>"
-                                style="width: 50%">
-                            <button class="btn btn-outline-success my-2 my-sm-0 d-flex align-items-center justify-content-center" type="submit">
-                                <span class="material-symbols-outlined">search</span>
-                            </button>
-                        </div>
-                    </form>
+        <div class="container-fluid" id="splash">
+            <h1 id="splash-text">Manage Users</h1>
+            <br><br>
+            <div class="container-fluid">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <form class="form-inline mb-3" action="" method="GET">
+                            <div class="input-group">
+                                <select class="form-select" name="search_type" style="width:5em">
+                                    <option value="" selected disabled>Filter</option>
+                                    <option value="username" <?php echo (isset($_GET['search_type']) && $_GET['search_type']==='username') ? 'selected' : '';?>>Username</option>
+                                    <option value="email" <?php echo (isset($_GET['search_type']) && $_GET['search_type']==='email') ? 'selected' : '';?>>Email</option>
+                                    <option value="comment" <?php echo (isset($_GET['search_type']) && $_GET['search_type']==='comment') ? 'selected' : '';?>>Comment</option>
+                                </select>
+                                <input type="text" class="form-control" name="search"
+                                    placeholder="Search by name" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>"
+                                    style="width: 50%">
+                                <button class="btn btn-outline-success my-2 my-sm-0 d-flex align-items-center justify-content-center" type="submit">
+                                    <span class="material-symbols-outlined">search</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </div>
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <?php
-                    try {
-                        $pdo = new PDO("mysql:host=localhost;dbname=db_24725301", "24725301", "24725301");
-                        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                    } catch (PDOException $e) {
-                        die("Connection failed: " . $e->getMessage());
-                    }
-                    if (isset($_GET['userId'])) {
-                        $sql = 'SELECT * FROM users WHERE userId = "' . $_GET['userId'] . '"';
-                    }
-                    else if (isset($_GET['search'])) {
-                        if (isset($_GET['search_type'])) {
-                            if ($_GET['search_type']==="email") {
-                                $sql = 'SELECT * FROM users WHERE email LIKE "%' . $_GET['search'] . '%"';
-                            } else if ($_GET['search_type']==="comment") {
-                                $sql = 'SELECT DISTINCT users.userid, users.userName, users.profilePicture, users.email, users.enabled FROM users JOIN comments ON users.userid = comments.userid WHERE commentText LIKE "%' . $_GET['search'] . '%"';
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <?php
+                        try {
+                            $pdo = new PDO("mysql:host=localhost;dbname=db_24725301", "24725301", "24725301");
+                            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                        } catch (PDOException $e) {
+                            die("Connection failed: " . $e->getMessage());
+                        }
+                        if (isset($_GET['userId'])) {
+                            $sql = 'SELECT * FROM users WHERE userId = "' . $_GET['userId'] . '"';
+                        }
+                        else if (isset($_GET['search'])) {
+                            if (isset($_GET['search_type'])) {
+                                if ($_GET['search_type']==="email") {
+                                    $sql = 'SELECT * FROM users WHERE email LIKE "%' . $_GET['search'] . '%"';
+                                } else if ($_GET['search_type']==="comment") {
+                                    $sql = 'SELECT DISTINCT users.userid, users.userName, users.profilePicture, users.email, users.enabled FROM users JOIN comments ON users.userid = comments.userid WHERE commentText LIKE "%' . $_GET['search'] . '%"';
+                                } else {
+                                    $sql = 'SELECT * FROM users WHERE userName LIKE "%' . $_GET['search'] . '%"';
+                                }
                             } else {
                                 $sql = 'SELECT * FROM users WHERE userName LIKE "%' . $_GET['search'] . '%"';
                             }
                         } else {
-                            $sql = 'SELECT * FROM users WHERE userName LIKE "%' . $_GET['search'] . '%"';
+                            echo 'Please search to be able to see users!';
+                            $stopSearch = true;
                         }
-                    } else {
-                        echo 'Please search to be able to see users!';
-                        $stopSearch = true;
-                    }
 
-                    if (!isset($stopSearch)) {
-                        $stmt = $pdo->query($sql);
-                        if($stmt->rowCount() > 0) {
-                            echo "<div class='row' id='user-cards'>";
-                            // Iterate over each user
-                            while ($row = $stmt->fetch()) {
-                                echo "<div class='col mb-4'>";
-                                echo "<div class='card" . (($row['enabled']) ? '' : ' disabled-card') . "'>";
-                                echo "<div class='card-body'>";
-                                
-                                $_SESSION['manageUserPicture'] = $row['profilePicture'];
-                                echo "<div class='d-flex align-items-center justify-content-center'>";
-                                echo "<img src='../php/png_image.php?id=" . $row['userid'] . "' class='rounded-circle border' alt='User Picture' height='50' style='margin-right: 0.5em'>";
-                                echo "<h5 class='card-title'>" . $row['userName'] . (($row['enabled']) ? '' : ' [disabled]') . " — " . $row['email'] . "</h5>";
-                                echo "<a href='../php/disable_profile.php?id=" . $row['userid'] . "'><button class='btn btn-outline-danger my-2 my-sm-0 d-flex align-items-center justify-content-center' style='padding: 6px; margin: 0em 0.5em 0em 0.5em''>
-                                    <span class='material-symbols-outlined'>power_settings_new</span>
-                                </button></a>";
-                                echo "<a href='../php/edit_profile.php?id=" . $row['userid'] . "'><button class='btn btn-outline-primary my-2 my-sm-0 d-flex align-items-center justify-content-center' style='padding: 6px; margin-right: 0.5em'>
-                                    <span class='material-symbols-outlined'>edit</span>
-                                </button></a>";
-                                echo "<a href='../php/delete_profile.php?id=" . $row['userid'] . "'><button class='btn btn-outline-danger my-2 my-sm-0 d-flex align-items-center justify-content-center' style='padding: 6px; margin-right: 0.5em'>
-                                    <span class='material-symbols-outlined'>delete</span>
-                                </button></a>";
-                                // Add a link to view user's comments
-                                echo "<a href='../pages/view_user_comments.php?userId=" . $row['userid'] . "' class='btn btn-outline-primary my-2 my-sm-0 d-flex align-items-center justify-content-center' style='padding: 6px;'>
-                                    Comments
-                                </a>";
-
+                        if (!isset($stopSearch)) {
+                            $stmt = $pdo->query($sql);
+                            if($stmt->rowCount() > 0) {
+                                echo "<div class='row' id='user-cards'>";
+                                while ($row = $stmt->fetch()) {
+                                    echo "<div class='col mb-4'>";
+                                    echo "<div class='card" . (($row['enabled']) ? '' : ' disabled-card') . "'>";
+                                    echo "<div class='card-body'>";
+                                    $_SESSION['manageUserPicture'] = $row['profilePicture'];
+                                    echo "<div class='d-flex align-items-center justify-content-center'>";
+                                    echo "<img src='../php/png_image.php?id=" . $row['userid'] . "' class='rounded-circle border' alt='User Picture' height='50' style='margin-right: 0.5em'>";
+                                    echo "<h5 class='card-title'>" . $row['userName'] . (($row['enabled']) ? '' : ' [disabled]') . " — " . $row['email'] . "</h5>";
+                                    echo "<a href='../php/disable_profile.php?id=" . $row['userid'] . "'><button class='btn btn-outline-danger my-2 my-sm-0 d-flex align-items-center justify-content-center' style='padding: 6px; margin: 0em 0.5em 0em 0.5em''>
+                                        <span class='material-symbols-outlined'>power_settings_new</span>
+                                    </button></a>";
+                                    echo "<a href='../php/edit_profile.php?id=" . $row['userid'] . "'><button class='btn btn-outline-primary my-2 my-sm-0 d-flex align-items-center justify-content-center' style='padding: 6px; margin-right: 0.5em'>
+                                        <span class='material-symbols-outlined'>edit</span>
+                                    </button></a>";
+                                    echo "<a href='../php/delete_profile.php?id=" . $row['userid'] . "'><button class='btn btn-outline-danger my-2 my-sm-0 d-flex align-items-center justify-content-center' style='padding: 6px; margin-right: 0.5em'>
+                                        <span class='material-symbols-outlined'>delete</span>
+                                    </button></a>";
+                                    echo "<a href='../pages/view_user_comments.php?userId=" . $row['userid'] . "' class='btn btn-outline-primary my-2 my-sm-0 d-flex align-items-center justify-content-center' style='padding: 6px;'>
+                                        Comments
+                                    </a>";
+                                    echo "</div>";
+                                    echo "</div>";
+                                    echo "</div>";
+                                    echo "</div>";
+                                }
                                 echo "</div>";
-
-                                echo "</div>";
-                                echo "</div>";
-                                echo "</div>";
+                            } else {
+                                echo "<h3 class='text-center'>No users found.</h3>";
                             }
-                            echo "</div>";
-                        } else {
-                            echo "<h3 class='text-center'>No users found.</h3>";
                         }
-                    }
-                    ?>
+                        ?>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
-
     <footer class="footer text-center py-3">
         <div class="container-fluid text-center" data-bs-theme="dark">
             <div class="row mt-3">
@@ -172,10 +164,8 @@ if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
             </div>
         </div>
     </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
     </script>
-
 </body>
 </html>

@@ -35,23 +35,18 @@ if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
                     </div>
                 </form>
                 <?php
-                    // Check if profile picture data is available in session
                     if (isset($_SESSION['profilePicture'])) {
                         echo '';
                     } else {
                         echo '<a class="nav-link disabled" href="#top">Login</a>or<a class="nav-link" href="./register.php">Register</a>';
                     }
                 ?>
-                
                 <div class="dropdown <?php echo isset($_SESSION['userName']) ? '' : 'd-none'; ?>" id="dropdown">
                     <a class="nav-link dropdown-toggle d-flex align-items-center justify-content-center" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <?php
-                        // Check if profile picture data is available in session
                         if (isset($_SESSION['profilePicture'])) {
-                            // Use the display_image.php script as the src attribute
                             echo '<img src="../php/display_image.php" height="24" alt="Profile Picture" class="material-symbols-outlined rounded-circle border">';
                         } else {
-                            // If profile picture data is not available, display a placeholder image or text
                             echo '<span class="material-symbols-outlined">account_circle</span>';
                         }
                     ?><?php echo isset($_SESSION['userName']) ? $_SESSION['userName'] : 'User'; ?>
@@ -64,47 +59,46 @@ if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
             </div>
         </div>
     </nav>
-
     <div id="main">
-    <div class="container-fluid" id="splash">
-        <h1 id="splash-text">Manage Comments</h1>
-        <br><br>
-        <div class="container-fluid">
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <form class="form-inline mb-3" action="../pages/manage_users.php" method="GET">
-                        <div class="input-group">
-                            <select class="form-select" name="search_type" style="width:5em">
-                                <option value="" selected disabled>Filter</option>
-                                <option value="username" <?php echo (isset($_GET['search_type']) && $_GET['search_type']==='username') ? 'selected' : '';?>>Username</option>
-                                <option value="email" <?php echo (isset($_GET['search_type']) && $_GET['search_type']==='email') ? 'selected' : '';?>>Email</option>
-                            </select>
-                            <input type="text" class="form-control" name="search"
-                                placeholder="Search by name" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>"
-                                style="width: 50%">
-                            <button class="btn btn-outline-success my-2 my-sm-0 d-flex align-items-center justify-content-center" type="submit">
-                                <span class="material-symbols-outlined">search</span>
-                            </button>
-                        </div>
-                    </form>
+        <div class="container-fluid" id="splash">
+            <h1 id="splash-text">Manage Comments</h1>
+            <br><br>
+            <div class="container-fluid">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <form class="form-inline mb-3" action="../pages/manage_users.php" method="GET">
+                            <div class="input-group">
+                                <select class="form-select" name="search_type" style="width:5em">
+                                    <option value="" selected disabled>Filter</option>
+                                    <option value="username" <?php echo (isset($_GET['search_type']) && $_GET['search_type']==='username') ? 'selected' : '';?>>Username</option>
+                                    <option value="email" <?php echo (isset($_GET['search_type']) && $_GET['search_type']==='email') ? 'selected' : '';?>>Email</option>
+                                </select>
+                                <input type="text" class="form-control" name="search"
+                                    placeholder="Search by name" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>"
+                                    style="width: 50%">
+                                <button class="btn btn-outline-success my-2 my-sm-0 d-flex align-items-center justify-content-center" type="submit">
+                                    <span class="material-symbols-outlined">search</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </div>
-            <div class="row justify-content-center">
-            <div class="col-sm-8">
-                    <table class="table">
-                        <thead>
-                        <th scope="col">Comment</th>
-                        <th scope="col">Time Stamp</th>
-                        <th scope="col">Product Page</th>
-                        <th scope="col"></th>
-                        </thead>
-                        <tbody id="discussion">
-                        </tbody>
+                <div class="row justify-content-center">
+                <div class="col-sm-8">
+                        <table class="table">
+                            <thead>
+                            <th scope="col">Comment</th>
+                            <th scope="col">Time Stamp</th>
+                            <th scope="col">Product Page</th>
+                            <th scope="col"></th>
+                            </thead>
+                            <tbody id="discussion">
+                            </tbody>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
     <footer class="footer text-center py-3">
         <div class="container-fluid text-center" data-bs-theme="dark">
             <div class="row mt-3">
@@ -112,14 +106,11 @@ if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
             </div>
         </div>
     </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
     </script>
-
     <script>
         $(document).ready(function() {
-            // Function to reload discussion thread
             var interval = 1000;
             function reloadDiscussion() {
                 console.log("here");
@@ -129,7 +120,7 @@ if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
                         echo"$userId";?>',
                     type: 'GET',
                     success: function(response) {
-                        $('#discussion').html(response); // Update discussion content
+                        $('#discussion').html(response);
                         setTimeout(reloadDiscussion, interval);
                     },
                     error: function(xhr, status, error) {
@@ -137,11 +128,8 @@ if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
                     }
                 });
             }setTimeout(reloadDiscussion, interval);
-
-            // Initial load of discussion thread
             reloadDiscussion();
         });
-
-</script>
+    </script>
 </body>
 </html>

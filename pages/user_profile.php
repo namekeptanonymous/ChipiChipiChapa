@@ -34,23 +34,18 @@ if (!isset($_SESSION['profilePicture'])) {
                     </div>
                 </form>
                 <?php
-                    // Check if profile picture data is available in session
                     if (isset($_SESSION['profilePicture'])) {
                         echo '';
                     } else {
                         echo '<a class="nav-link disabled" href="#top">Login</a>or<a class="nav-link" href="./register.php">Register</a>';
                     }
                 ?>
-                
                 <div class="dropdown <?php echo isset($_SESSION['userName']) ? '' : 'd-none'; ?>" id="dropdown">
                     <a class="nav-link dropdown-toggle d-flex align-items-center justify-content-center" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <?php
-                        // Check if profile picture data is available in session
                         if (isset($_SESSION['profilePicture'])) {
-                            // Use the display_image.php script as the src attribute
                             echo '<img src="../php/display_image.php" height="24" alt="Profile Picture" class="material-symbols-outlined rounded-circle border">';
                         } else {
-                            // If profile picture data is not available, display a placeholder image or text
                             echo '<span class="material-symbols-outlined">account_circle</span>';
                         }
                     ?><?php echo isset($_SESSION['userName']) ? $_SESSION['userName'] : 'User'; ?>
@@ -63,7 +58,6 @@ if (!isset($_SESSION['profilePicture'])) {
             </div>
         </div>
     </nav>
-
     <div id="main">
         <div class="container-fluid" id="splash">
             <h1 id="splash-text">User Profile</h1>
@@ -77,10 +71,8 @@ if (!isset($_SESSION['profilePicture'])) {
                                     <img src="../php/display_image.php" class="rounded-circle border" alt="Profile Picture" height="50">
                                     <?php echo $_SESSION['userName']; ?>
                                 </div>
-
                                 <label for="profile-email">Email:</label><br>
                                 <span id="profile-email"><?php echo $_SESSION['email']; ?></span><br><br>
-                    
                                 <label for="profile-admin">Admin:</label><br>
                                 <span id="profile-admin"><?php echo ($_SESSION['admin']) ? 'Yes' : 'No'; ?></span>
                             </div>
@@ -93,23 +85,18 @@ if (!isset($_SESSION['profilePicture'])) {
                     <fieldset>
                         <label for="name">Name:</label><br>
                         <input type="text" id="name" name="name"><br><br>
-
                         <label for="passw"> New Password:</label><br>
                         <input type="password" id="passw" name="passw"><br><br>
-
                         <label for="passw-rpt">New Password (repeat):</label><br>
                         <input type="password" id="passw-rpt" name="passw-rpt"><br><br>
-
                         <label for="profile-pic" id="profile-pic-label">Profile Picture:</label><br>
                         <input type="file" id="profile-pic" name="profile-pic"><br><br>
-            
                         <input type="submit" value="Submit" class="btn btn-success" id="submit-btn">
                     </fieldset>
                 </form>
             </div>
         </div>
     </div>
-
     <footer class="footer text-center py-3">
         <div class="container-fluid text-center" data-bs-theme="dark">
             <div class="row mt-3">
@@ -117,21 +104,17 @@ if (!isset($_SESSION['profilePicture'])) {
             </div>
         </div>
     </footer>
-
     <script>
         document.getElementById('profile-change').addEventListener('submit', function(event) {
             var name = document.getElementById('name').value;
             var passw = document.getElementById('passw').value;
             var passwRpt = document.getElementById('passw-rpt').value;
             var profilePicture = document.getElementById('profile-pic').value;
-
-            // Check if any field is empty
             if (!name && !passw && !passwRpt && !profilePicture) {
                 alert('No fields were filled in, please fill in at least one type of field(s).');
                 event.preventDefault();
                 return;
             }
-
             if (passw !== passwRpt) {
                 alert('New password and repeat password must match.');
                 event.preventDefault();
@@ -139,10 +122,8 @@ if (!isset($_SESSION['profilePicture'])) {
             }
         });
     </script>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
     </script>
-
 </body>
 </html>

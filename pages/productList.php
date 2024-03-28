@@ -30,7 +30,6 @@ try {
             </a>
             <div class="navbar-nav text-center d-flex align-items-center justify-content-center">
                 <?php
-                    // Check if profile picture data is available in session
                     if (isset($_SESSION['profilePicture'])) {
                         echo '';
                     } else {
@@ -40,12 +39,9 @@ try {
                 <div class="dropdown <?php echo isset($_SESSION['userName']) ? '' : 'd-none'; ?>" id="dropdown">
                     <a class="nav-link dropdown-toggle d-flex align-items-center justify-content-center" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <?php
-                        // Check if profile picture data is available in session
                         if (isset($_SESSION['profilePicture'])) {
-                            // Use the display_image.php script as the src attribute
                             echo '<img src="../php/display_image.php" height="24" alt="Profile Picture" class="material-symbols-outlined rounded-circle border">';
                         } else {
-                            // If profile picture data is not available, display a placeholder image or text
                             echo '<span class="material-symbols-outlined">account_circle</span>';
                         }
                     ?><?php echo isset($_SESSION['userName']) ? $_SESSION['userName'] : 'User'; ?>
@@ -65,15 +61,13 @@ try {
         </p>
         <br><br>
         <div class="row justify-content-center">
-            <div class="col-md-6 d-flex justify-content-between"> <!-- Added d-flex and justify-content-between classes -->
+            <div class="col-md-6 d-flex justify-content-between">
                 <div>
-                    <!-- Filter Button -->
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filterModal">
                         Filter
                     </button>
                 </div>
                 <div>
-                    <!-- Search Bar -->
                     <form id="searchForm" method="GET" class="d-flex">
                         <input type="text" class="form-control me-2" name="search" placeholder="Search" id="searchInput">
                         <button type="submit" class="btn btn-outline-success">Search</button>
@@ -81,10 +75,8 @@ try {
                 </div>
             </div>
         </div>
-
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <!-- Filter Modal -->
                 <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
@@ -129,23 +121,19 @@ try {
                     </div>
                 </div>
             </div>
-        </div>
-            
+        </div>       
     <div class="row justify-content-center">
         <div class="col-md-12">
             <?php
             if(isset($_GET['search'])) {
                 $search = $_GET['search'];
-                $category = isset($_GET['category']) ? $_GET['category'] : ''; // Get selected category
+                $category = isset($_GET['category']) ? $_GET['category'] : '';
                 $limit = isset($_GET['limit']) ? $_GET['limit'] : 20; 
-                
                 $sql = 'SELECT * FROM products WHERE name LIKE :search';
                 if (!empty($category)) {
-                    // If a category is selected, add category filter to the query
                     $sql .= ' AND id IN (SELECT productId FROM productcategory WHERE categoryId = :category)';
                 }
                 $sql .= ' LIMIT :limit';
-                
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(':search', '%' . $search . '%');
                 if (!empty($category)) {
@@ -177,7 +165,6 @@ try {
             ?>
         </div>
     </div>
-
     <footer class="footer text-center py-3">
         <div class="container-fluid text-center" data-bs-theme="dark">
             <div class="row mt-3">
@@ -186,14 +173,12 @@ try {
         </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
     <script>
     document.getElementById('category').addEventListener('change', function() {
         var categoryId = this.value;
         if (categoryId !== '') {
             var formData = new FormData();
             formData.append('categoryId', categoryId);
-
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === XMLHttpRequest.DONE) {
@@ -205,13 +190,12 @@ try {
                 }
             };
             xhr.open('POST', 'getSubcategories.php', true);
-            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest'); // Set the correct header
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
             xhr.send(formData);
         }
     });
 
     function applyFilters() {
-        //build url
         var search = document.getElementById('searchInput').value;
         var category = document.getElementById('category').value;
         var limit = document.getElementById('limit').value;
@@ -220,7 +204,6 @@ try {
         const existingSearch = urlParams.get('search');
         const existingCategory = urlParams.get('category');
         const existingLimit = urlParams.get('limit');
-
         if (search === '') {
             search = existingSearch || '';
         }
@@ -230,21 +213,17 @@ try {
         if (limit === '') {
             limit = existingLimit || '20'; 
         }
-
         var url = 'productList.php?search=' + encodeURIComponent(search) + '&category=' + encodeURIComponent(selectedSubcategory || category) + '&limit=' + encodeURIComponent(limit);
         window.location.href = url;
     }
-
     document.getElementById('filterForm').addEventListener('submit', function(event) {
         event.preventDefault();
         applyFilters();
     });
-
     document.getElementById('searchForm').addEventListener('submit', function(event) {
         event.preventDefault();
         applyFilters();
     });
-
 </script>
 </body>
 </html>

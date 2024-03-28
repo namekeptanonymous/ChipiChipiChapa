@@ -34,26 +34,22 @@ if (isset($_SESSION['profilePicture'])) {
                     </div>
                 </form>
                 <?php
-                    // Check if profile picture data is available in session
                     if (isset($_SESSION['profilePicture'])) {
                         echo '';
                     } else {
                         echo '<a class="nav-link disabled" href="#top">Login</a>or<a class="nav-link" href="./register.php">Register</a>';
                     }
                 ?>
-                
                 <div class="dropdown <?php echo isset($_SESSION['userName']) ? '' : 'd-none'; ?>" id="dropdown">
                     <a class="nav-link dropdown-toggle d-flex align-items-center justify-content-center" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <?php
-                        // Check if profile picture data is available in session
                         if (isset($_SESSION['profilePicture'])) {
-                            // Use the display_image.php script as the src attribute
                             echo '<img src="../php/display_image.php" height="24" alt="Profile Picture" class="material-symbols-outlined rounded-circle border">';
                         } else {
-                            // If profile picture data is not available, display a placeholder image or text
                             echo '<span class="material-symbols-outlined">account_circle</span>';
                         }
-                    ?><?php echo isset($_SESSION['userName']) ? $_SESSION['userName'] : 'User'; ?>
+                    ?>
+                    <?php echo isset($_SESSION['userName']) ? $_SESSION['userName'] : 'User'; ?>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="userDropdown">
                         <li><a class="dropdown-item" href="./user_profile.php">User Profile</a></li>
@@ -64,7 +60,6 @@ if (isset($_SESSION['profilePicture'])) {
             </div>
         </div>
     </nav>
-
     <div id="main">
         <div class="container-fluid text-center" id="login-body">
             <div class="row justify-content-center">
@@ -76,10 +71,8 @@ if (isset($_SESSION['profilePicture'])) {
                                     <h3 class="card-title">Login</h3><br>
                                     <label for="email">Email:</label><br>
                                     <input type="email" id="email" name="email" placeholder="example@gmail.com"><br><br>
-                        
                                     <label for="passw">Password:</label><br>
                                     <input type="password" id="passw" name="passw"><br><br>
-                        
                                     <input type="submit" value="Submit" class="btn btn-success" id="submit-btn">
                                 </div>
                             </div>
@@ -90,7 +83,6 @@ if (isset($_SESSION['profilePicture'])) {
         </div>
         <br>
     </div>
-
     <footer class="footer text-center py-3">
         <div class="container-fluid text-center" data-bs-theme="dark">
             <div class="row mt-3">
@@ -98,10 +90,7 @@ if (isset($_SESSION['profilePicture'])) {
             </div>
         </div>
     </footer>
-
     <script>
-        
-
         var email_pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         var email = document.getElementById("email");
         var passw = document.getElementById("passw");
@@ -137,7 +126,6 @@ if (isset($_SESSION['profilePicture'])) {
                 submit_btn.disabled = true;
             }
         });
-
         document.getElementById("login-form").onsubmit = function(e){
             if (email.value == null || email.value == "") {
                 e.preventDefault();
@@ -151,10 +139,8 @@ if (isset($_SESSION['profilePicture'])) {
             }
         }
     </script>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
     </script>
-
 </body>
 </html>

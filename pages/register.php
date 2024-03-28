@@ -34,7 +34,6 @@ if (isset($_SESSION['profilePicture'])) {
                     </div>
                 </form>
                 <?php
-                    // Check if profile picture data is available in session
                     if (isset($_SESSION['profilePicture'])) {
                         echo '';
                     } else {
@@ -44,12 +43,9 @@ if (isset($_SESSION['profilePicture'])) {
                 <div class="dropdown <?php echo isset($_SESSION['userName']) ? '' : 'd-none'; ?>" id="dropdown">
                     <a class="nav-link dropdown-toggle d-flex align-items-center justify-content-center" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <?php
-                        // Check if profile picture data is available in session
                         if (isset($_SESSION['profilePicture'])) {
-                            // Use the display_image.php script as the src attribute
                             echo '<img src="../php/display_image.php" height="24" alt="Profile Picture" class="material-symbols-outlined rounded-circle border">';
                         } else {
-                            // If profile picture data is not available, display a placeholder image or text
                             echo '<span class="material-symbols-outlined">account_circle</span>';
                         }
                     ?><?php echo isset($_SESSION['userName']) ? $_SESSION['userName'] : 'User'; ?>
@@ -63,7 +59,6 @@ if (isset($_SESSION['profilePicture'])) {
             </div>
         </div>
     </nav>
-
     <div id="main">
         <div class="container-fluid text-center" id="register-body">
             <div class="row justify-content-center">
@@ -73,22 +68,16 @@ if (isset($_SESSION['profilePicture'])) {
                             <div class="card register-card">
                                 <div class="card-body">
                                     <h3 class="card-title">Register</h3><br>
-
                                     <label for="name">Name:</label><br>
                                     <input type="text" id="name" name="name"><br><br>
-
                                     <label for="email">Email:</label><br>
                                     <input type="email" id="email" name="email" placeholder="example@gmail.com"><br><br>
-                        
                                     <label for="passw">Password:</label><br>
                                     <input type="password" id="passw" name="passw"><br><br>
-
                                     <label for="passw-rpt">Password (repeat):</label><br>
                                     <input type="password" id="passw-rpt" name="passw-rpt"><br><br>
-
                                     <label for="profile-pic" id="profile-pic-label">Profile Picture (file must be a .png):</label><br>
                                     <input type="file" id="profile-pic" name="profile-pic"><br><br>
-                        
                                     <input type="submit" value="Submit" class="btn btn-success" id="submit-btn">
                                 </div>
                             </div>
@@ -99,7 +88,6 @@ if (isset($_SESSION['profilePicture'])) {
         </div>
         <br>
     </div>
-
     <footer class="footer text-center py-3">
         <div class="container-fluid text-center" data-bs-theme="dark">
             <div class="row mt-3">
@@ -107,7 +95,6 @@ if (isset($_SESSION['profilePicture'])) {
             </div>
         </div>
     </footer>
-
     <script>
         var email_pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         var email = document.getElementById("email");
@@ -134,7 +121,6 @@ if (isset($_SESSION['profilePicture'])) {
                 }
             }
         });
-
         passw.addEventListener("blur", function(e) {
             if (passw.value != null && passw.value != "") {
                 passw.style = "";
@@ -149,7 +135,6 @@ if (isset($_SESSION['profilePicture'])) {
                 submit_btn.disabled = true;
             }
         });
-
         profilePic.addEventListener("blur", function(e) {
             if (profilePic.files.length > 0) {
                 profile_pic_flag = true;
@@ -181,11 +166,8 @@ if (isset($_SESSION['profilePicture'])) {
             }
         }
     </script>
-
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
     </script>
-
 </body>
 </html>
