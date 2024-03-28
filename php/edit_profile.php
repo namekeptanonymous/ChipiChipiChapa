@@ -2,12 +2,12 @@
 
 <?php
     session_start();
+
     if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
         header("Location: ../index.php");
         exit();
     }
 
-    // Establish database connection
     try {
         $pdo = new PDO("mysql:host=localhost;dbname=db_24725301", "24725301", "24725301");
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -20,7 +20,6 @@
             echo "<script>window.location.href = '../pages/user_profile.php';</script>";
             exit();
         }
-        // Sanitize the ID parameter to prevent SQL injection
         $userId = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
     } else {
         echo "<script>alert('There was no user ID provided.'); window.history.back();</script>";
@@ -54,23 +53,18 @@
                     </div>
                 </form>
                 <?php
-                    // Check if profile picture data is available in session
-                    if (isset($_SESSION['profilePicture'])) {
+                    if (isset($_SESSION['profilePicture'])) { // Checks if logged in
                         echo '';
                     } else {
                         echo '<a class="nav-link" href="../pages/login.php">Login</a>or<a class="nav-link" href="./register.php">Register</a>';
                     }
                 ?>
-                
                 <div class="dropdown <?php echo isset($_SESSION['userName']) ? '' : 'd-none'; ?>" id="dropdown">
                     <a class="nav-link dropdown-toggle d-flex align-items-center justify-content-center" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <?php
-                        // Check if profile picture data is available in session
                         if (isset($_SESSION['profilePicture'])) {
-                            // Use the display_image.php script as the src attribute
                             echo '<img src="./display_image.php" height="24" alt="Profile Picture" class="material-symbols-outlined rounded-circle border">';
                         } else {
-                            // If profile picture data is not available, display a placeholder image or text
                             echo '<span class="material-symbols-outlined">account_circle</span>';
                         }
                     ?><?php echo isset($_SESSION['userName']) ? $_SESSION['userName'] : 'User'; ?>
@@ -127,7 +121,6 @@
             var passwRpt = document.getElementById('passw-rpt').value;
             var profilePicture = document.getElementById('profile-pic').value;
 
-            // Check if any field is empty
             if (!name && !passw && !passwRpt && !profilePicture) {
                 alert('No fields were filled in, please fill in at least one type of field(s).');
                 event.preventDefault();

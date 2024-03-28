@@ -8,7 +8,6 @@ try {
     die("Connection failed: " . $e->getMessage());
 }
 
-# Get all comments
 $pid = $_GET['pid'];
 $sql = 'SELECT * FROM comments WHERE pid LIKE :pid';
 $stmt = $pdo->prepare($sql);
@@ -35,7 +34,6 @@ while ($row = $stmt->fetch()) {
         <span class='material-symbols-outlined'>delete</span></button></a></td>";
     }
     echo "</tr>";
-    
 }
 ?>
 

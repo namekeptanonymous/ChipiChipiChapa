@@ -1,5 +1,4 @@
 <?php
-    // Establish database connection
     try {
         $pdo = new PDO("mysql:host=localhost;dbname=db_24725301", "24725301", "24725301");
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -7,30 +6,22 @@
         die("Connection failed: " . $e->getMessage());
     }
 
-    // Check if the 'id' parameter is present in the query string
     if (isset($_GET['id'])) {
-        // Sanitize the ID parameter to prevent SQL injection
         $userId = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
 
-        // Query to retrieve the profile picture based on user ID
         $sql = "SELECT profilePicture FROM users WHERE userid = :userid";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':userid', $userId, PDO::PARAM_INT);
         $stmt->execute();
 
-        // Check if a record is found
         if ($stmt->rowCount() > 0) {
-            // Fetch the profile picture
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            
             header('Content-Type: image/png');
             echo $row['profilePicture'];
         } else {
-            // Output a default image or an error message if user ID is not found
-            echo '';
+            echo 'No user was found with the given user ID.';
         }
     } else {
-        // Output a default image or an error message if 'id' parameter is not provided
-        echo '';
+        echo 'No ID was sent with the URL.';
     }
 ?>
