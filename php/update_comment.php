@@ -1,17 +1,14 @@
 <?php
 session_start();
 
-// Database connection parameters
 $servername = "localhost";
 $username = "24725301";
 $password = "24725301";
 $database = "db_24725301";
 
 try {
-    // Create connection
     $conn = new PDO("mysql:host=$servername;dbname=$database", $username, $password);
     
-    // Set PDO error mode to exception
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
     // Check if form is submitted
@@ -19,7 +16,6 @@ try {
         $commentText = $_POST['newText'];
         $commentId = $_POST['commentId'];
         
-        // Check if all required fields are provided
         if (!empty($commentText) && !empty($commentId)) {
             if ($commentId != 0) {
                 $stmt = $conn->prepare("UPDATE comments SET commentText = ? WHERE commentId = ?");

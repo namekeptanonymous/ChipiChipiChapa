@@ -1,22 +1,17 @@
 <?php
 session_start();
 
-// Database connection parameters
 $servername = "localhost";
 $username = "24725301";
 $password = "24725301";
 $database = "db_24725301";
 
 try {
-    // Create connection
     $conn = new PDO("mysql:host=$servername;dbname=$database", $username, $password);
     
-    // Set PDO error mode to exception
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
-    // Check if form is submitted
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        // Set parameters
         $email = $_POST['email'];
         $userName = $_POST['name'];
         $password = password_hash($_POST['passw'], PASSWORD_DEFAULT);
@@ -33,26 +28,21 @@ try {
         $newUserId = $lastUserId + 1;
 
 
-        // Prepare SQL statement
         $stmt = $conn->prepare("INSERT INTO users (userid, email, profilePicture, userName, password, admin) VALUES (?, ?, ?, ?, ?, 0)");
         
-        // Bind parameters
         $stmt->bindParam(1, $newUserId, PDO::PARAM_INT);
         $stmt->bindParam(2, $email, PDO::PARAM_STR);
         $stmt->bindParam(3, $profilePicture, PDO::PARAM_LOB);
         $stmt->bindParam(4, $userName, PDO::PARAM_STR);
         $stmt->bindParam(5, $password, PDO::PARAM_STR);
 
-        // Execute SQL statement
         if ($stmt->execute()) {
-            // User successfully registered, set session variables
             $_SESSION['logged_in'] = true;
             $_SESSION['userId'] = $newUserId;
             $_SESSION['userName'] = $userName;
             $_SESSION['email'] = $email;
             $_SESSION['profilePicture'] = $profilePicture;
             $_SESSION['admin'] = false;
-            
             echo "<script>alert('User $userName has registered successfully.'); window.location.href = '../index.php';</script>";
 
         } else {
