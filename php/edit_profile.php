@@ -25,6 +25,8 @@
         echo "<script>alert('There was no user ID provided.'); window.history.back();</script>";
         exit();
     }
+
+    require_once "./log_page.php";
 ?>
 
 <html>
@@ -71,7 +73,11 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="userDropdown">
                         <li><a class="dropdown-item" href="../pages/user_profile.php">User Profile</a></li>
-                        <?php echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="../pages/manage_users.php">Manage Users</a></li>' : '';?>
+                        <?php
+                        echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="../pages/manage_users.php">Manage Users</a></li>' : '';
+                        echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="../pages/user_metrics.php">User Metrics</a></li>' : '';
+                        echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="../pages/inputData.php">Edit Product DB</a></li>' : '';
+                        ?>
                         <li><a class="dropdown-item" href="./logout.php?return=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                     </ul>
                 </div>

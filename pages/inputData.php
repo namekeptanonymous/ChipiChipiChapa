@@ -42,7 +42,6 @@ if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
                     <ul class="dropdown-menu" aria-labelledby="userDropdown">
                         <li><a class="dropdown-item" href="../pages/user_profile.php">User Profile</a></li>
                         <?php echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="../pages/manage_users.php">Manage Users</a></li>' : '';?>
-                        <?php echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="../pages/inputData.php">Edit Product DB</a></li>' : '';?>
                         <li><a class="dropdown-item" href="../php/logout.php?return=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                     </ul>
                 </div>
@@ -52,13 +51,13 @@ if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
     <div id="main">
         <div class="container-fluid" id="splash">
             <h2>Price History Form</h2>
-            <?php if ($_SESSION['admin']): ?>
-            <form method="post" action="../php/addData.php">>
+            <?php if ($_SESSION['admin']): ?><br>
+            <form method="post" action="../php/addData.php">
                 <p>Product ID:</label><br>
                 <input type="text" id="product_id" name="product_id" required><br><br>
                 <label for="num_entries">Number of Entries:</label><br>
                 <input type="number" id="num_entries" name="num_entries" min="1" required><br><br>
-                <input type="submit" value="Add Entries">
+                <input type="submit" class="btn btn-success" id="submit-btn" value="Add Entries">
             </form>
             <?php else: ?>
             <p>You do not have admin privileges.</p>

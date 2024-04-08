@@ -100,3 +100,7 @@ body {
         box-shadow: 0 0 5pt 2pt #c2a7a7;
     }
 }
+
+#submit-btn {
+    width: 6em;
+}

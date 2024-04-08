@@ -28,12 +28,17 @@ try {
                     exit();
                 }
                 $_SESSION['logged_in'] = true;
+                unset($_SESSION['siteVisited']);
                 $_SESSION['userId'] = $user['userid'];
                 $_SESSION['userName'] = $user['userName'];
                 $_SESSION['email'] = $user['email'];
                 $_SESSION['profilePicture'] = $user['profilePicture'];
                 $_SESSION['admin'] = $user['admin'];
-
+            
+                $stmt = $conn->prepare("INSERT INTO user_logins_regs (userId, action) VALUES (?, 'login')");
+                $stmt->bindParam(1, $user['userid'], PDO::PARAM_INT);
+                $stmt->execute();
+            
                 if ($_SESSION['admin']) {
                     echo "<script>alert('Admin $userName with email $email has logged in successfully.'); window.location.href = '../index.php';</script>";
                 } else {
@@ -42,6 +47,7 @@ try {
             } else {
                 echo "<script>alert('Incorrect password'); window.history.back();</script>";
             }
+            
         } else {
             echo "<script>alert('No user was found with the provided e-mail.'); window.history.back();</script>";
         }

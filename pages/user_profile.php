@@ -6,6 +6,8 @@ if (!isset($_SESSION['profilePicture'])) {
     header("Location: ../index.php");
     exit();
 }
+
+require_once "../php/log_page.php";
 ?>
 
 <html>
@@ -26,7 +28,7 @@ if (!isset($_SESSION['profilePicture'])) {
             <div class="navbar-nav text-center d-flex align-items-center justify-content-center">
                 <form class="form-inline" action="./productList.php" method="get">
                     <div class="input-group">
-                        <input type="text" class="form-control mr-sm-2" placeholder="Search" name="search"/>
+                        <input type="text" class="form-control mr-sm-2" placeholder="Search products" name="search"/>
                         <button class="btn btn-outline-secondary my-2 my-sm-0 d-flex
                         align-items-center justify-content-center" type="submit" style="padding: 6px">
                             <span class="material-symbols-outlined">search</span>
@@ -51,8 +53,11 @@ if (!isset($_SESSION['profilePicture'])) {
                     ?><?php echo isset($_SESSION['userName']) ? $_SESSION['userName'] : 'User'; ?>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                        <?php echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="./manage_users.php">Manage Users</a></li>' : '';?>
-                        <?php echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="../pages/inputData.php">Edit Product DB</a></li>' : '';?>
+                        <?php
+                        echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="./manage_users.php">Manage Users</a></li>' : '';
+                        echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="./user_metrics.php">User Metrics</a></li>' : '';
+                        echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="./inputData.php">Edit Product DB</a></li>' : '';
+                        ?>
                         <li><a class="dropdown-item" href="../php/logout.php?return=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                     </ul>
                 </div>
@@ -80,21 +85,57 @@ if (!isset($_SESSION['profilePicture'])) {
                         </div>
                     </div>
                 </div>
-                <br><br>
-                <p><b>Modify profile details:</b></p>
-                <form method="POST" id="profile-change" action="../php/change_profile.php" enctype="multipart/form-data">
-                    <fieldset>
-                        <label for="name">Name:</label><br>
-                        <input type="text" id="name" name="name"><br><br>
-                        <label for="passw"> New Password:</label><br>
-                        <input type="password" id="passw" name="passw"><br><br>
-                        <label for="passw-rpt">New Password (repeat):</label><br>
-                        <input type="password" id="passw-rpt" name="passw-rpt"><br><br>
-                        <label for="profile-pic" id="profile-pic-label">Profile Picture:</label><br>
-                        <input type="file" id="profile-pic" name="profile-pic"><br><br>
-                        <input type="submit" value="Submit" class="btn btn-success" id="submit-btn">
-                    </fieldset>
-                </form>
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <br><br>
+                        <p><b>Modify profile details:</b></p>
+                        <form method="POST" id="profile-change" action="../php/change_profile.php" enctype="multipart/form-data">
+                            <fieldset>
+                                <label for="name">Name:</label><br>
+                                <input type="text" id="name" name="name"><br><br>
+                                <label for="passw"> New Password:</label><br>
+                                <input type="password" id="passw" name="passw"><br><br>
+                                <label for="passw-rpt">New Password (repeat):</label><br>
+                                <input type="password" id="passw-rpt" name="passw-rpt"><br><br>
+                                <label for="profile-pic" id="profile-pic-label">Profile Picture:</label><br>
+                                <input type="file" id="profile-pic" name="profile-pic"><br><br>
+                                <input type="submit" value="Submit" class="btn btn-success" id="submit-btn">
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-md-10">
+                        <br><br>
+                        <?php
+                            $db = new mysqli('localhost', '24725301', '24725301', 'db_24725301');
+
+                            if ($db->connect_error) {
+                                die("Connection failed: " . $db->connect_error);
+                            }
+                            $query = "SELECT pid, commentText, timestamp FROM comments WHERE userId = $userId ORDER BY timestamp DESC";
+                            $result = $db->query($query);
+
+                            echo "<h3>Comment History</h3>";
+                            // Check if there are no comments found
+                            if ($result->num_rows === 0) {
+                                echo "<br><p>No comments were found for the current user.</p>";
+                            } else {
+                                // Display the comment history table
+                                echo "<table class='table'>";
+                                echo "<thead><tr><th>Product ID</th><th>Comment</th><th>Timestamp</th></tr></thead>";
+                                echo "<tbody>";
+                                while ($row = $result->fetch_assoc()) {
+                                    echo "<tr><td>";
+                                    echo "<a href='./product.php?pid=" . $row['pid'] . "'>" . $row['pid'] . "</a>";
+                                    echo "</td><td>" . $row["commentText"] . "</td><td>" . $row["timestamp"] . "</td></tr>";
+                                }
+                                echo "</tbody>";
+                                echo "</table>";
+                            }
+                        ?>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

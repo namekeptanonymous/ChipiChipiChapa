@@ -2,6 +2,8 @@
 
 <?php
 session_start();
+
+require_once "php/log_page.php";
 ?>
 
 <html>
@@ -39,7 +41,11 @@ session_start();
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="userDropdown">
                         <li><a class="dropdown-item" href="pages/user_profile.php">User Profile</a></li>
-                        <?php echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="pages/manage_users.php">Manage Users</a></li>' : '';?>
+                        <?php
+                        echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="pages/manage_users.php">Manage Users</a></li>' : '';
+                        echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="pages/user_metrics.php">User Metrics</a></li>' : '';
+                        echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="pages/inputData.php">Edit Product DB</a></li>' : '';
+                        ?>
                         <li><a class="dropdown-item" href="php/logout.php?return=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                     </ul>
                 </div>

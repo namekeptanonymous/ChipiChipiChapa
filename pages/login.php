@@ -6,6 +6,8 @@ if (isset($_SESSION['profilePicture'])) {
     header("Location: ../index.php");
     exit();
 }
+
+require_once "../php/log_page.php";
 ?>
 
 <html>
@@ -53,8 +55,11 @@ if (isset($_SESSION['profilePicture'])) {
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="userDropdown">
                         <li><a class="dropdown-item" href="./user_profile.php">User Profile</a></li>
-                        <?php echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="./manage_users.php">Manage Users</a></li>' : '';?>
-                        <?php echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="../pages/inputData.php">Edit Product DB</a></li>' : '';?>
+                        <?php
+                        echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="./manage_users.php">Manage Users</a></li>' : '';
+                        echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="./user_metrics.php">User Metrics</a></li>' : '';
+                        echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="./inputData.php">Edit Product DB</a></li>' : '';
+                        ?>
                         <li><a class="dropdown-item" href="../php/logout.php?return=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                     </ul>
                 </div>
@@ -65,7 +70,7 @@ if (isset($_SESSION['profilePicture'])) {
         <div class="container-fluid text-center" id="login-body">
             <div class="row justify-content-center">
                 <div class="col-md-8">
-                    <form method="POST" id="login-form" action="../php/login.php" autocomplete="off">
+                    <form method="POST" id="login-form" action="../php/login_script.php" autocomplete="off">
                         <fieldset>
                             <div class="card login-card">
                                 <div class="card-body">
