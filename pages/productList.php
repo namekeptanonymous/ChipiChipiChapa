@@ -49,6 +49,7 @@ try {
                     <ul class="dropdown-menu" aria-labelledby="userDropdown">
                         <li><a class="dropdown-item" href="./user_profile.php">User Profile</a></li>
                         <?php echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="./manage_users.php">Manage Users</a></li>' : '';?>
+                        <?php echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="../pages/inputData.php">Edit Product DB</a></li>' : '';?>
                         <li><a class="dropdown-item" href="../php/logout.php?return=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                     </ul>
                 </div>
@@ -61,15 +62,14 @@ try {
         </p>
         <br><br>
         <div class="row justify-content-center">
-            <div class="col-md-6 d-flex justify-content-between">
-                <div>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filterModal">
+            <div class="col-md-8">
+                <div class="d-flex justify-content-between align-items-center">
+                <button type="button" class="btn btn-secondary" id="clearFilters" style="background-color: red; color: white; margin-right: 1em;">Clear Filters</button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filterModal">
                         Filter
                     </button>
-                </div>
-                <div>
-                    <form id="searchForm" method="GET" class="d-flex">
-                        <input type="text" class="form-control me-2" name="search" placeholder="Search" id="searchInput">
+                    <form id="searchForm" method="GET" class="d-flex flex-grow-1 mx-2">
+                        <input type="text" class="form-control me-2 flex-grow-1" name="search" placeholder="Search" id="searchInput">
                         <button type="submit" class="btn btn-outline-success">Search</button>
                     </form>
                 </div>
@@ -129,6 +129,9 @@ try {
                 $search = $_GET['search'];
                 $category = isset($_GET['category']) ? $_GET['category'] : '';
                 $limit = isset($_GET['limit']) ? $_GET['limit'] : 20; 
+                if (!empty($category)) {
+                    $sql .= ' AND id IN (SELECT productId FROM productcategory WHERE categoryId = :category)';
+                }
                 $sql = 'SELECT * FROM products WHERE name LIKE :search';
                 if (!empty($category)) {
                     $sql .= ' AND id IN (SELECT productId FROM productcategory WHERE categoryId = :category)';
@@ -142,7 +145,25 @@ try {
                 $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
                 $stmt->execute();
 
-                if($stmt->rowCount()>0 && !($search == "")){
+                $categoryName = '';
+                $sql = 'SELECT name FROM categories WHERE id = :categoryId';
+                $stmt1 = $pdo->prepare($sql);
+                $stmt1->bindValue(':categoryId', $category);
+                $stmt1->execute();
+                if($row = $stmt1->fetch()){
+                    $categoryName = $row['name'];
+                }
+                
+                if($search == '') {
+                    echo "<h3 class='text-center'>All Results</h3>";
+                } else if ($stmt->rowCount()>0 && $stmt1->rowCount()>0){
+                    echo "<h3 class='text-center'>Results for: " . $search . " in " . $categoryName. "</h3>";
+                } else if ($stmt->rowCount()>0) {
+                    echo "<h3 class='text-center'>Results for: " . $search . "</h3>";
+                }
+
+
+                if($stmt->rowCount()>0){
                     echo "<div class='row row-cols-2 row-cols-md-3 row-cols-lg-5' id=results>";
                     while ($row = $stmt->fetch()) {
                         echo "<div class='col mb-4'>";
@@ -156,6 +177,8 @@ try {
                         echo "</div>";
                     }
                     echo "</div>";
+                } else if (!($search == "") && $stmt1->rowCount()>0){
+                    echo "<h3 class='text-center'>Sorry, no results for: " . $search . " in " . $categoryName. "</h3>";
                 } else if (!($search == "")) {
                     echo "<h3 class='text-center'>Sorry, no results for: " . $search . "</h3>";
                 }
@@ -174,6 +197,7 @@ try {
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script>
+    
     document.getElementById('category').addEventListener('change', function() {
         var categoryId = this.value;
         if (categoryId !== '') {
@@ -193,6 +217,10 @@ try {
             xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
             xhr.send(formData);
         }
+    });
+
+    document.getElementById('clearFilters').addEventListener('click', function() {
+            window.location.href = 'productList.php?search=<?php if (isset($_GET['search'])) { $search = $_GET['search']; echo"$search";}?>&limit=5';
     });
 
     function applyFilters() {
@@ -224,6 +252,7 @@ try {
         event.preventDefault();
         applyFilters();
     });
+
 </script>
 </body>
 </html>

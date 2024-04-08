@@ -53,6 +53,7 @@ if (isset($_SESSION['profilePicture'])) {
                     <ul class="dropdown-menu" aria-labelledby="userDropdown">
                         <li><a class="dropdown-item" href="./user_profile.php">User Profile</a></li>
                         <?php echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="./manage_users.php">Manage Users</a></li>' : '';?>
+                        <?php echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="../pages/inputData.php">Edit Product DB</a></li>' : '';?>
                         <li><a class="dropdown-item" href="../php/logout.php?return=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                     </ul>
                 </div>

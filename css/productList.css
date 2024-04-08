@@ -112,3 +112,8 @@ body {
     border: none;
     width: 0em;
 }
+
+#priceChart {
+    width: 100%;
+    height: 400px; /* Adjust the height as needed */
+}

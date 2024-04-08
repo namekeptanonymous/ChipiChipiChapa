@@ -58,6 +58,7 @@ if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
                     <ul class="dropdown-menu" aria-labelledby="userDropdown">
                         <li><a class="dropdown-item" href="./user_profile.php">User Profile</a></li>
                         <li><a class="dropdown-item" href="../php/logout.php?return=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
+                        <?php echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="../pages/inputData.php">Edit Product DB</a></li>' : '';?>
                     </ul>
                 </div>
             </div>

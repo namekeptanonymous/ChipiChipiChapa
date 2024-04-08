@@ -31,7 +31,6 @@ try {
             </a>
             <div class="navbar-nav text-center d-flex align-items-center justify-content-center">
                 <?php
-                    // Check if profile picture data is available in session
                     if (isset($_SESSION['profilePicture'])) {
                         echo '';
                     } else {
@@ -41,12 +40,9 @@ try {
                 <div class="dropdown <?php echo isset($_SESSION['userName']) ? '' : 'd-none'; ?>" id="dropdown">
                     <a class="nav-link dropdown-toggle d-flex align-items-center justify-content-center" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <?php
-                        // Check if profile picture data is available in session
                         if (isset($_SESSION['profilePicture'])) {
-                            // Use the display_image.php script as the src attribute
                             echo '<img src="../php/display_image.php" height="24" alt="Profile Picture" class="material-symbols-outlined rounded-circle border">';
                         } else {
-                            // If profile picture data is not available, display a placeholder image or text
                             echo '<span class="material-symbols-outlined">account_circle</span>';
                         }
                     ?><?php echo isset($_SESSION['userName']) ? $_SESSION['userName'] : 'User'; ?>
@@ -54,6 +50,7 @@ try {
                     <ul class="dropdown-menu" aria-labelledby="userDropdown">
                         <li><a class="dropdown-item" href="./user_profile.php">User Profile</a></li>
                         <?php echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="./manage_users.php">Manage Users</a></li>' : '';?>
+                        <?php echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="../pages/inputData.php">Edit Product DB</a></li>' : '';?>
                         <li><a class="dropdown-item" href="../php/logout.php?return=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                     </ul>
                 </div>
@@ -65,16 +62,33 @@ try {
         <div class="container-fluid" id="splash">
             
             <div class="row justify-content-center"> 
-            <div class="col-md-8">
+            <div class="col-md-12">
                     <?php
                         if (isset($_GET['pid'])) {
                             $pid = $_GET['pid'];
                             
-                            # GET SQL
                             $sql = 'SELECT * FROM products WHERE id LIKE :pid';
                             $stmt = $pdo->prepare($sql);
                             $stmt -> bindValue(':pid', "%" . $pid . '%');
                             $stmt->execute();
+
+                            $sql_current_price = 'SELECT price FROM PriceHistory WHERE product_id = :pid ORDER BY date DESC LIMIT 1';
+                            $stmt_current_price = $pdo->prepare($sql_current_price);
+                            $stmt_current_price->bindValue(':pid', $pid);
+                            $stmt_current_price->execute();
+                            $current_price = $stmt_current_price->fetchColumn();
+
+                            $sql_max_price = 'SELECT MAX(price) FROM PriceHistory WHERE product_id = :pid';
+                            $stmt_max_price = $pdo->prepare($sql_max_price);
+                            $stmt_max_price->bindValue(':pid', $pid);
+                            $stmt_max_price->execute();
+                            $max_price = $stmt_max_price->fetchColumn();
+
+                            $sql_min_price = 'SELECT MIN(price) FROM PriceHistory WHERE product_id = :pid';
+                            $stmt_min_price = $pdo->prepare($sql_min_price);
+                            $stmt_min_price->bindValue(':pid', $pid);
+                            $stmt_min_price->execute();
+                            $min_price = $stmt_min_price->fetchColumn();
 
                             if($stmt->rowCount() > 0){
                                 $row = $stmt->fetch();
@@ -93,23 +107,33 @@ try {
                                 echo "</div>";
                                 echo "<br>";
 
-                                echo "<div class='row'>";
-                                    echo "<div class='col-sm-4'>";
-                                        echo "<a href='". $row['url']."'><button type='button' class='btn btn-primary'>Buy On Bestbuy</button></a>" ;
-                                    echo "</div>";
-                                    echo "<div class='col-sm-2'>";
-
-                                    echo "</div>";
-                                    echo "<div class='col-sm-6 '>";
-                                        echo "<h2><b> Current Price: </b>$". $row['price']."</h2>";
-                                        echo "<h2><b> Lowest Price: </b>$". $row['price']."</h2>";
-                                        echo "<h2><b> Highest Price: </b>$". $row['price']."</h2>";
-                                    echo "</div>";
+                                echo "<div class='row justify-content-center'>";
+                                echo "<div class='col-sm-8'>";
+                                echo "<canvas id='priceChart'></canvas>";
                                 echo "</div>";
+                                echo "<div class='col-sm-2'>";
+                                echo "<br>";
+                                echo "<select id='monthsSelector' class='form-select'>";
+                                echo "<option value='1'>1 Month</option>";
+                                echo "<option value='3'>3 Months</option>";
+                                echo "<option value='6'>6 Months</option>";
+                                echo "<option value='12'>12 Months</option>";
+                                echo "</select>";
+                                echo "<br>";
+                                echo "<div class='row'>";
+                                echo "<div class='col-sm-12'>";
+                                echo "<p><b> Current Price: </b>$" . $current_price . "</p>";
+                                echo "<p><b> Lowest Price: </b>$" . $min_price . "</p>";
+                                echo "<p><b> Highest Price: </b>$" . $max_price . "</p>";
+                                echo "</div>";
+                                echo "</div>";
+                                echo "</div>";
+                                echo "</div>";
+                                
+
                             } else {
                                 echo "ERROR: ITEM NOT FOUND";
                             }
-                            
                         }
                     ?>
                     <br>
@@ -148,6 +172,89 @@ try {
             </div>
         </div>
     </footer>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        $(document).ready(function() {
+        var ctx = document.getElementById('priceChart').getContext('2d');
+        var chart;
+
+        $('#monthsSelector').on('change', function() {
+            var months = $(this).val();
+            updateChart(months);
+        });
+
+        createChart(); 
+
+        updateChart(1);
+
+        var updateInterval = setInterval(function() {
+            updateChart($('#monthsSelector').val()); 
+        }, 1000);
+
+        function updateChart(months) {
+            $.ajax({
+                url: '../php/update_chart.php?pid=<?php echo $pid; ?>&months=' + months,
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    var dates = response.dates.reverse();
+                    var prices = response.prices.reverse();
+
+                    var highestPrice = Math.max(...prices);
+                    var lowestPrice = Math.min(...prices);
+                    var currentPrice = prices[prices.length - 1];
+
+                    chart.data.labels = dates;
+                    chart.data.datasets[0].data = prices;
+                    chart.update();
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', status, error);
+                }
+            });
+        }
+
+        function createChart() {
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        label: '$ CAD',
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1,
+                        data: [] 
+                    }]
+                },
+                options: {
+                    animation: {
+                        duration: 0 
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    return '$' + value.toFixed(2);
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Price History',
+                            font: {
+                                size: 20
+                            },
+                            color: 'black'
+                        }
+                    }
+                }
+            });
+        }
+    });
+    </script>
     <script>
         document.getElementById('commentSubmit').addEventListener('submit', function(event){
             var comment = document.getElementById('commentText').value;
