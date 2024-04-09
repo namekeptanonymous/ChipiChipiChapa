@@ -234,7 +234,13 @@ if ($db->connect_error) {
                     },
                     scales: {
                         y: {
-                            beginAtZero: true
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0, // To ensure that only integer values are shown on the y-axis
+                                callback: function(value, index, values) {
+                                    return value.toFixed(0); // To remove decimal points
+                                }
+                            }
                         }
                     },
                     plugins: {
