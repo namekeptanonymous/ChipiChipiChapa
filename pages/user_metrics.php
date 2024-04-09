@@ -25,6 +25,7 @@ if ($db->connect_error) {
     <link rel="icon" type="image/x-icon" href="../images/icon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ChipiChipiChapa</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
     <nav class="navbar sticky-top navbar-expand-md">
@@ -145,8 +146,15 @@ if ($db->connect_error) {
 
                 <div class="row justify-content-center align-items-center">
                     <div class="col-md-8">
-                        <br><h2>Usage Chart</h3><br>
-                        Placeholder graph area.
+                        <br><h2>Usage Charts</h3><br>
+                        <div class="btn-group" role="group" aria-label="Basic radio toggle button group" style="scale: 70%;">
+                            <input type="radio" class="btn-check" name="btnradio" id="page-visits" value="page_visits" autocomplete="off" checked>
+                            <label class="btn btn-outline-primary" for="page-visits">Page Visits</label>
+
+                            <input type="radio" class="btn-check" name="btnradio" id="total-visits" value="total_visits" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="total-visits">User Visits</label>
+                        </div>
+                        <canvas id='usageChart'></canvas>
                     </div>
                 </div>
             </div>
@@ -162,5 +170,89 @@ if ($db->connect_error) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    $(document).ready(function() {
+        var ctx = document.getElementById('usageChart').getContext('2d');
+        var chart;
+
+        var radioButtons = document.querySelectorAll('input[name="btnradio"]');
+        var radioPick = document.querySelector('input[name="btnradio"]:checked').value;
+        // Add a change event listener to each radio button
+        for (var i = 0; i < radioButtons.length; i++) {
+            radioButtons[i].addEventListener('change', function() {
+                radioPick = document.querySelector('input[name="btnradio"]:checked').value;
+                if (chart) {
+                    chart.destroy();
+                }
+                createChart(); 
+                updateChart();
+            });
+        }
+
+        createChart(); 
+        updateChart();
+
+        var updateInterval = setInterval(function() {
+            updateChart(); 
+        }, 1000);
+
+        function updateChart() {
+            $.ajax({
+                url: '../php/update_usage_charts.php?table='+radioPick,
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    var dates = response.dates.reverse();
+                    var visits = response.visits.reverse();
+
+                    chart.data.labels = dates;
+                    chart.data.datasets[0].data = visits;
+                    chart.update();
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', status, error);
+                }
+            });
+        }
+
+        function createChart() {
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        label: 'Total Visits',
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1,
+                        data: [] 
+                    }]
+                },
+                options: {
+                    animation: {
+                        duration: 0 
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: (radioPick === "page_visits") ? "Total Page Visits Per Day" : "Total Unique User Visits Per Day",
+                            font: {
+                                size: 20,
+                                weight: 300
+                            },
+                            color: 'black'
+                        }
+                    }
+                }
+            });
+        }
+    });
+    </script>
+
 </body>
 </html>
