@@ -113,11 +113,12 @@ require_once "../php/log_page.php";
                             if ($db->connect_error) {
                                 die("Connection failed: " . $db->connect_error);
                             }
-                            $query = "SELECT pid, commentText, timestamp FROM comments WHERE userId = $userId ORDER BY timestamp DESC";
-                            $result = $db->query($query);
+                            $stmt = $db->prepare("SELECT pid, commentText, timestamp FROM comments WHERE userId = ? ORDER BY timestamp DESC");
+                            $stmt->bind_param("i", $userId);
+                            $stmt->execute();
+                            $result = $stmt->get_result();
 
                             echo "<h3>Comment History</h3>";
-                            // Check if there are no comments found
                             if ($result->num_rows === 0) {
                                 echo "<br><p>No comments were found for the current user.</p>";
                             } else {
