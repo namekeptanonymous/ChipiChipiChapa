@@ -7,6 +7,7 @@ try {
 } catch (PDOException $e) {
     die("Connection failed: " . $e->getMessage());
 }
-
-print("Tracked product");
+# Need pid, userid
+# pass also time and id
+print($_POST['pid'])
 ?>

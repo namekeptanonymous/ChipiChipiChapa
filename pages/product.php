@@ -299,10 +299,12 @@ require_once "../php/log_page.php";
         $(document).ready(function(){
             $("#track").click(function(){
                 console.log("Track product");
+
                 $.ajax({
                     type: "POST",
                     url: "../php/track_product.php",
-                    data: { execute: true },
+                    // Userid and pid
+                    data: {<?php echo'userId: '.$_SESSION["userId"].', pid: '.$_GET["pid"].' '?>},
                     success: function(response){
                         alert(response);
                     }
