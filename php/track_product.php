@@ -16,7 +16,7 @@ try {
         $pid = $_POST['pid'];
         $time = date("Y-m-d H:i:s");
         
-        $trackedChecked = 'SELECT userId FROM trackedproducts WHERE userId = :userId AND pid = :pid';
+        $trackedChecked = 'SELECT userId FROM trackedProducts WHERE userId = :userId AND pid = :pid';
         $trackedStmt = $conn->prepare($trackedChecked);
         $trackedStmt->bindValue(':userId', $userId);
         $trackedStmt->bindValue(':pid', $pid); 
@@ -28,7 +28,7 @@ try {
             return;
         }
 
-        $stmt = $conn->prepare("INSERT INTO trackedproducts (pid, userid, timestamp) VALUES (?,?,?)");
+        $stmt = $conn->prepare("INSERT INTO trackedProducts (pid, userid, timestamp) VALUES (?,?,?)");
         $stmt->bindParam(1, $pid, PDO::PARAM_INT);
         $stmt->bindParam(2, $userId, PDO::PARAM_INT);
         $stmt->bindParam(3, $time, PDO::PARAM_STR);
