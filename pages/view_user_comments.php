@@ -55,6 +55,7 @@ require_once "../php/log_page.php";
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="userDropdown">
                         <li><a class="dropdown-item" href="./user_profile.php">User Profile</a></li>
+                        <li><a class="dropdown-item" href="./tracked.php">Tracked Products</a></li>
                         <?php
                         echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="./manage_users.php">Manage Users</a></li>' : '';
                         echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="./user_metrics.php">User Metrics</a></li>' : '';
