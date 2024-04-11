@@ -131,6 +131,9 @@ require_once "../php/log_page.php";
                                 echo "<p><b> Current Price: </b>$" . $current_price . "</p>";
                                 echo "<p><b> Lowest Price: </b>$" . $min_price . "</p>";
                                 echo "<p><b> Highest Price: </b>$" . $max_price . "</p>";
+                                echo "<a href='". $row['url']."'><button type='button' class='btn btn-primary'>Buy On Bestbuy</button></a>" ;
+                                echo "<br>";
+                                echo "<br>";
                                 if (isset($_SESSION['userId'])) {
                                     echo"<input type='submit' value='Track This Product' class='btn btn-success' id='track'>";
                                 }
