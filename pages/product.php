@@ -130,6 +130,9 @@ require_once "../php/log_page.php";
                                 echo "<p><b> Current Price: </b>$" . $current_price . "</p>";
                                 echo "<p><b> Lowest Price: </b>$" . $min_price . "</p>";
                                 echo "<p><b> Highest Price: </b>$" . $max_price . "</p>";
+                                if (isset($_SESSION['userId'])) {
+                                    echo"<input type='submit' value='Track This Product' class='btn btn-success' id='track'>";
+                                }
                                 echo "</div>";
                                 echo "</div>";
                                 echo "</div>";
@@ -289,6 +292,22 @@ require_once "../php/log_page.php";
                 });
             }setTimeout(reloadDiscussion, interval);
             reloadDiscussion();
+        });
+    </script>
+
+    <script>
+        $(document).ready(function(){
+            $("#track").click(function(){
+                console.log("Track product");
+                $.ajax({
+                    type: "POST",
+                    url: "../php/track_product.php",
+                    data: { execute: true },
+                    success: function(response){
+                        alert(response);
+                    }
+                });
+            });
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
