@@ -42,6 +42,10 @@ try {
             $_SESSION['profilePicture'] = $profilePicture;
             $_SESSION['admin'] = false;
             echo "<script>alert('User $userName has registered successfully.'); window.location.href = '../index.php';</script>";
+
+            $stmt = $conn->prepare("INSERT INTO user_logins_regs (userId, action) VALUES (?, 'register')");
+            $stmt->bindParam(1, $user['userid'], PDO::PARAM_INT);
+            $stmt->execute();
         } else {
             echo "<script>alert('Error: Something went wrong. User registration failed, please check that you have entered a unique e-mail address that has never been used before.'); window.history.back();</script>";
         }

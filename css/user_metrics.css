@@ -1,7 +1,3 @@
-h3 {
-    margin-top: 2em;
-}
-
 body {
     justify-content: center;
     align-items: center;
@@ -32,7 +28,7 @@ body {
 
 #splash {
     box-sizing: border-box;
-    margin: 5vw 5vw 10vw 5vw;
+    margin: 5vw 5vw 12vw 5vw;
     padding: 5vw 5vw 7vw 5vw;
     width: 90%;
     background-color: white;
@@ -44,16 +40,11 @@ body {
     font-weight: 900;
 }
 
-#splash-text-blue {
-    color: #287dd6;
-}
-
-#splash-text-maroon {
-    color: #8A1538;
-}
-
-#results {
-    margin-top: 2vh;
+#profile-pic {
+    max-width: 90%;
+    border: 1px lightgray solid;
+    border-radius: 0.2rem;
+    padding: 0.3em;
 }
 
 .dropdown-menu {
@@ -61,59 +52,40 @@ body {
     right: 0;
     left: auto;
     top: auto;
-    transform: translateX(-3.9em);
+    transform: translateX(-4em);
 }
 
 .nav-link .material-symbols-outlined {
     margin-right: 0.1em;
 }
 
-.card {
-    margin-top: 2em;
-    width: 100%;
-}
-
-.card-body {
-    height: 6em;
-    overflow: hidden;
-}
-
-.card-title {
-    font-size: 1em;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: normal; 
-}
-
-.card-text {
-    font-size: 1.2em; 
-    font-weight: bold;
-    white-space: normal;
-    overflow: hidden;
-}
-
-.card-img-top {
-    height: 15em;
-    max-width: 100%;
-    object-fit: contain;
-}
-
-#results {
-    margin-top: 2vh;
+.user-profile {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 2em;
+    font-weight: 700;
+    margin: 0em 0.5em 0.5em 0.5em;
+}
+
+.user-profile img {
+    margin-right: 0.2em;
+}
+
+.card {
+    padding: 0.5em;
+}
+
+#user-cards a {
+    text-decoration: none;
+}
+
+.disabled-card {
+    opacity: 60%;
 }
 
 .delete {
     border: none;
     width: 0em;
-}
-
-#priceChart {
-    width: 100%;
-    height: 400px;
 }

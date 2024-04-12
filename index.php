@@ -2,6 +2,8 @@
 
 <?php
 session_start();
+
+require_once "php/log_page.php";
 ?>
 
 <html>
@@ -39,7 +41,12 @@ session_start();
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="userDropdown">
                         <li><a class="dropdown-item" href="pages/user_profile.php">User Profile</a></li>
-                        <?php echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="pages/manage_users.php">Manage Users</a></li>' : '';?>
+                        <li><a class="dropdown-item" href="pages/tracked.php">Tracked Products</a></li>
+                        <?php
+                        echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="pages/manage_users.php">Manage Users</a></li>' : '';
+                        echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="pages/user_metrics.php">User Metrics</a></li>' : '';
+                        echo ($_SESSION['admin']) ? '<li><a class="dropdown-item" href="pages/inputData.php">Edit Product DB</a></li>' : '';
+                        ?>
                         <li><a class="dropdown-item" href="php/logout.php?return=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                     </ul>
                 </div>
@@ -55,8 +62,8 @@ session_start();
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-6">
-                            Welcome to ChipiChipiChapa, the best place to find the best prices on Amazon products!<br><br>
-                            Use the search bar to search for products by name or with an Amazon link!
+                            Welcome to ChipiChipiChapa, the best place to find the best prices on Best Buy products!<br><br>
+                            Use the search bar to search for products by name or with a Best Buy link!
                     </div>
                     <div class="col-md-6 d-flex align-items-center justify-content-center">
                         <form class="form-inline" action="pages/productList.php" method="get">
