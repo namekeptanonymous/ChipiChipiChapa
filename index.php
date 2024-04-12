@@ -62,8 +62,8 @@ require_once "php/log_page.php";
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-6">
-                            Welcome to ChipiChipiChapa, the best place to find the best prices on Amazon products!<br><br>
-                            Use the search bar to search for products by name or with an Amazon link!
+                            Welcome to ChipiChipiChapa, the best place to find the best prices on Best Buy products!<br><br>
+                            Use the search bar to search for products by name or with a Best Buy link!
                     </div>
                     <div class="col-md-6 d-flex align-items-center justify-content-center">
                         <form class="form-inline" action="pages/productList.php" method="get">

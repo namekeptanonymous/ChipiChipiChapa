@@ -20,7 +20,7 @@ if (!isset($_SESSION['admin']) || !$_SESSION['admin']) {
 <body>
     <nav class="navbar sticky-top navbar-expand-md">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#"><img src="../images/longbanner.png" height="38" class="d-inline-block align-top brand-image" alt=""></a>
+            <a class="navbar-brand" href="../index.php"><img src="../images/longbanner.png" height="38" class="d-inline-block align-top brand-image" alt=""></a>
             <div class="navbar-nav text-center d-flex align-items-center justify-content-center">
                 <?php
                     if (isset($_SESSION['profilePicture'])) {
